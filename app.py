@@ -1,12 +1,7 @@
 from flask import Flask
+from views import views
 
-app = Flask(__name__)
+# This file is for configuration only
 
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Bye bye World!'
-
-
-# if __name__ == '__main__':
-#     app.run()
+app = Flask(__name__, static_folder='static')
+app.register_blueprint(views)
