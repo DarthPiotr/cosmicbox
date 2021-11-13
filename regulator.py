@@ -12,7 +12,7 @@ class Regulator:
     _t_d: float = 0.25
     """czas wyprzedzenia"""
 
-    def pid_positional(self, e_list: list, t_p: int):
+    def pid_positional(self, e_list: list, t_p: float):
         """
         Algorytm sterowania PID (pozycyjny)
         :param e_list: lista wszystkich uchybów
