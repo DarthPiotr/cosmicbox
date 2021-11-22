@@ -6,11 +6,31 @@ class Regulator:
     _u_min: float = 0
     """Minimalne napięcie wyjściowe"""
     _k_p: float = 0.015
-    """Wzmocnienie wrgulatora"""
+    """Wzmocnienie regulatora"""
     _t_i: float = 0.05
-    """czas zdwojenia"""
+    """Czas zdwojenia"""
     _t_d: float = 0.25
-    """czas wyprzedzenia"""
+    """Czas wyprzedzenia"""
+
+    def __init__(self,
+                 u_min: float = 0,
+                 u_max: float = 10,
+                 k_p: float = 0.015,
+                 t_i: float = 0.05,
+                 t_d: float = 0.25):
+        """
+        Konstruktor z domyślnymi wartościami parametrów
+        :param u_min: Minimalne napięcie wyjściowe
+        :param u_max: Maksymalne napięcie wyjściowe
+        :param k_p: Wzmocnienie regulatora
+        :param t_i: Czas zdwojenia
+        :param t_d: Czas wyprzedzenia
+        """
+        self._u_min = u_min
+        self._u_max = u_max
+        self._k_p = k_p
+        self._t_i = t_i
+        self._t_d = t_d
 
     def pid_positional(self, e_list: list, t_p: float):
         """

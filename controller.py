@@ -6,21 +6,30 @@ class Controller:
     """Kontroler odpowiadający za współpracę aparatury pomiarowej i regulatora"""
     # TODO: zrobić wielkie sprzątanie
 
-    _u_min = 0.0
-    """Minimalny sygnał reguratora"""
-    _u_max = 10.0
-    """Maksymalny sygnał reguratora"""
-    _qd_min = 0.0
-    """Minimalne otwarcie zaworu"""
-    _qd_max = 0.05
-    """minimalne otwarcie zaworu"""
-
-    _regulator = Regulator()
+    # Regulator
+    _regulator: Regulator
     """Regulator użyty do sterowania"""
-    _sensor = Sensor()
-    """Czujnik wykonujący pomiary"""
+    _u_min: float = 0.0
+    """Minimalny sygnał reguratora"""
+    _u_max: float = 10.0
+    """Maksymalny sygnał reguratora"""
 
-    # TODO: porządnie zaimplementować resztę pól
+    # Sensor
+    _sensor: Sensor
+    """Czujnik wykonujący pomiary"""
+    _val_min: float = 0
+    """Minimalna wartość pomiaru"""
+    _val_max: float = 10
+    """Maksymalna wartość pomiaru"""
+
+    # Pomieszczenie
+    _qd_min: float = 0.0
+    """Minimalne otwarcie zaworu (moc grzejnika)"""
+    _qd_max: float = 0.05
+    """Maksymalne otwarcie zaworu (moc grzejnika)"""
+
+
+    # TODO: porządnie zaimplementować resztę pól - razem z implementacją pomieszczenia
     # - Symulacja
     h_p = 0.0  # [m]    - początkowa wysokość cieczy w zbiorniku
     h_ust = 1.5  # [m] - docelowa wysokość cieczy
@@ -33,21 +42,23 @@ class Controller:
     read_count = t_sim / t_p  # Wyliczenie ilośc iteracji
 
     def __init__(self):
-        # TODO: zrobić to ładniej, może setter w regulatorze?
-        self._regulator._u_min = self._u_min
-        self._regulator._u_max = self._u_max
+        self._regulator = Regulator(u_min=self._u_min, u_max=self._u_max)
+        self._sensor = Sensor(val_min=self._val_min, val_max=self._val_max)
 
     def make_step(self):
         """Wykonuje jeden krok symulacji"""
         # Oblicz uchyb i dodaj do listy
         deviation = self.h_ust - self.readings[-1]
         self.deviations.append(deviation)
+
         # # Oblicz wartość sygnału sterującego i dodaj do listy
         signal = self._regulator.pid_positional(self.deviations, self.t_p)
         self.signals.append(signal)
+
         # # Przekonwertuj sygnał na nastawienie zaworu i dodaj do listy
         input_ = self._signal_to_heat(signal)
         self.inputs.append(input_)
+
         # # Odczytaj aktualny poziom
         reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, t_p=self.t_p)
         self.readings.append(reading)
@@ -59,7 +70,6 @@ class Controller:
 
     def _signal_to_heat(self, signal: float) -> float:
         """Zamienia sygnał otrzymany przez regurator na odpowiedni dopływ do systemu"""
-        # TODO: znaleźć lepszą nazwę xd
         a = (self._qd_max - self._qd_min) / (self._u_max - self._u_min)  # wspolczynnik kierunkowy
         b = self._qd_min - a * self._u_min               # wyraz wolny
         return a * signal + b

@@ -8,6 +8,4 @@ import test
 app = Flask(__name__, static_folder='static')
 app.register_blueprint(views)
 
-test.run()
-
-# TODO: zmienić favicon
+# test.run()

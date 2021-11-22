@@ -5,7 +5,7 @@ from matplotlib import pyplot, pyplot as plt
 def run():
     """Wykonuje kod w ramach testów"""
     c = Controller()
-    readings = c.simulate()
+    c.simulate()
 
     # plotting
     x = range(0, int(c.read_count + 1))
