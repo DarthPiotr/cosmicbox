@@ -1,7 +1,7 @@
 from flask import Flask
 from views import views
 
-import test
+# import test
 
 # This file is for configuration only
 

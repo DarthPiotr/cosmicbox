@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'navbar_base.html' %}
+{% block title %}Bokeh - wykres{% endblock %}
 {% block metas %}
     {{ super() }}
     {{ js_resources|indent(4)|safe }}
@@ -7,7 +8,8 @@
 {% endblock %}
 {% block content %}
     {{ super() }}
-<div>
+    <div>
     {{ div | safe }}
-</div>
+    </div>
+    <a href="{{ url_for('index') }}"><<< Powrót</a>
 {% endblock %}

@@ -1,4 +1,3 @@
-import numpy as np
 from flask import Blueprint, render_template
 from controller import Controller
 
@@ -14,14 +13,15 @@ views = Blueprint('', __name__)
 @views.route('/')
 def index():
     """Home"""
-    return render_template("page_template.html")
+    return render_template("index.html")
 
 
 # Test
 @views.route('/bokeh')
 def bokeh():
     # https://github.com/saltastro/flask-start-setup/blob/master/docs/bokeh.md
-    p = Figure(title='Wykres')
+    # https://docs.bokeh.org/en/latest/docs/user_guide/embed.html
+    p = Figure(title='Sterowanie PID')
 
     # grab the static resources
     js_resources = INLINE.render_js()
@@ -30,7 +30,7 @@ def bokeh():
     c = Controller()
     c.simulate()
 
-    x = range(0, int(c.read_count + 1)) # np.linspace(-10, 10, 200)
+    x = range(0, len(c.readings)-1)  # np.linspace(-10, 10, 200)
     y = c.readings[:-1]  # np.sin(x)
 
     p.line(x=x, y=y)

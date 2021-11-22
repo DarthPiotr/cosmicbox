@@ -1,5 +1,5 @@
 from controller import Controller
-from matplotlib import pyplot, pyplot as plt
+from matplotlib import pyplot as plt
 
 
 def run():
@@ -8,7 +8,7 @@ def run():
     c.simulate()
 
     # plotting
-    x = range(0, int(c.read_count + 1))
+    x = range(0, len(c.readings)-1)
 
     fig, axs = plt.subplots(3)
     axs[0].plot(x, c.readings[:-1])
