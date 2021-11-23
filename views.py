@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template
-from controller import Controller
 
-from bokeh.embed import components
+
+from bokeh.embed import components, server_document
 from bokeh.plotting import Figure
 from bokeh.resources import INLINE
+from tornado.ioloop import IOLoop
 
+from controller import Controller
 # configure blueprint
 
 views = Blueprint('', __name__)
@@ -21,23 +23,14 @@ def index():
 def bokeh():
     # https://github.com/saltastro/flask-start-setup/blob/master/docs/bokeh.md
     # https://docs.bokeh.org/en/latest/docs/user_guide/embed.html
-    p = Figure(title='Sterowanie PID')
 
     # grab the static resources
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
 
-    c = Controller()
-    c.simulate()
-
-    x = range(0, len(c.readings)-1)  # np.linspace(-10, 10, 200)
-    y = c.readings[:-1]  # np.sin(x)
-
-    p.line(x=x, y=y)
-
-    script, div = components(p)
+    script = server_document('http://localhost:5006/bkapp')  # , div = components(p)
 
     return render_template('bokeh_test.html',
-                           script=script, div=div,
+                           script=script,
                            js_resources=js_resources,
                            css_resources=css_resources)

@@ -49,8 +49,6 @@ class Controller:
     def __init__(self):
         self._regulator = Regulator(u_min=self._u_min, u_max=self._u_max)
         self._sensor = Sensor(val_min=self._val_min, val_max=self._val_max)
-        self.readings = [self.val_p]
-        self.deviations = [self.val_ust - self.val_p]
 
     def make_step(self):
         """Wykonuje jeden krok symulacji (pozycyjnie)"""
@@ -73,6 +71,10 @@ class Controller:
     def simulate(self):
         """Wykonuje symulację"""
         step_count = self.t_sim / self.t_p
+        self.readings = [self.val_p]
+        self.deviations = [self.val_ust - self.val_p]
+        self.signals = []
+        self.inputs = []
         for n in range(0, int(step_count + 1)):
             self.make_step()
 

@@ -4,12 +4,11 @@
     {{ super() }}
     {{ js_resources|indent(4)|safe }}
     {{ css_resources|indent(4)|safe }}
-    {{ script|indent(4)|safe }}
 {% endblock %}
 {% block content %}
     {{ super() }}
     <div>
-    {{ div | safe }}
+    {{ script|indent(4)|safe }}
     </div>
     <a href="{{ url_for('index') }}"><<< Powrót</a>
 {% endblock %}
