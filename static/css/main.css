@@ -1,11 +1,14 @@
-nav {
-    background-image: url("../media/nav_bg2.jpg");
-    /* background-color: rgb(71, 71, 71); */
+/*nav {
+    /*background-image: url("../media/nav_bg2.jpg");
+    background-color: rgb(71, 71, 71);
+} */
 
+.logo {
+    height: 10px;
 }
 
 .options {
-    color: white;
+    color: black;
 }
 
 .options:hover {
@@ -13,3 +16,37 @@ nav {
     cursor: pointer;
 }
 
+.content {
+    /* background-image: url("../media/grzejniczek4.jpg"); */
+    background: linear-gradient(0deg, rgba(50,50,50,0.3030345927433473) 0%, rgba(107,107,107,0.2834267496060925) 100%),url("../media/grzejniczek4.jpg");
+    background-size: 100%;
+    height: 300px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+.button {
+    background-color: rgba(85, 40, 10, 0.918);
+    border: none;
+    color: white;
+    width: 20%;
+    text-decoration:  none;
+}
+
+.button:hover {
+    background-color:  rgb(218, 218, 218);
+    color: rgb(68, 68, 68);
+    transition: 0.2s;
+}
+
+.about {
+    font-family: 'Roboto', sans-serif;
+}
+
+.bord {
+    border-top: 3px solid rgba(85, 40, 10, 0.411);
+}
+
+.bord2 {
+    border-bottom: 3px solid rgba(85, 40, 10, 0.411);
+}

@@ -2,6 +2,40 @@
 {% block title %}Homepage{% endblock %}
 {% block content %}
 {{ super() }}
-    <h1>Hello world!</h1>
-    <a href="{{ url_for('bokeh') }}">Przejdź do na wykresu >>></a>
+
+<section>
+    <div class="content position-relative mx-5 rounded">
+        <div class="text d-flex flex-column align-items-center  p-4">
+            <div class="fs-2 mt-3 mb-5 pb-1">Zaufaj marce nr 1 na rynku!</div>
+            <a href="{{ url_for('bokeh') }}" class="rounded text-center button py-3 px-5 mt-5 me-3">Sprawdź symulacje</a>
+        </div>
+    </div>
+</section>
+
+<section >
+    <div class="row m-5 pt-5">
+        <div class="col-6">
+            <h1 class="about mb-4">O nas</h1>
+            <div class="about">Jesteśmy firmą zlożoną z młodych osób, które nie pragną niczego innego niż rozwoju. Pracujemy 16h dziennie, właśnie po to
+            by nasze marzenia stały się prawdą. A naszym marzeniem... jest stworzenie najbardziej wydajnego systemu grzewczego w historii.
+            Grzejnikami pasjonujemy się od dawna. Pierwsze grzejniki dostailsmy zanim skończyliśmy 10lat!. Możesz nam w pełni zaufać,
+            jedyne czego chcemy to ogrzać twój dom <3.</div>
+        </div>
+        <div class="col-6">
+            <img class="w-100 rounded" src="{{ url_for('static',filename='media/grzenijczek2.jpg') }}"  >
+        </div>
+    </div>
+
+</section>
+
+<footer class="footer bord my-3 mx-5">
+    <div class="d-flex   d-row justify-content-around">
+        <div>&copy Przemysł 4.0</div>
+        <a href="{{ url_for('index') }}" class="nav-link options" >Strona Główna</a>
+        <a href="{{ url_for('bokeh') }}" class="nav-link options">Wykresy</a>
+        <a class="nav-link options">Cennik</a>
+        <a class="nav-link options">Opinie</a>
+    </div>
+</footer>
+
 {% endblock %}
