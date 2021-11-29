@@ -3,39 +3,58 @@ from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, Slider
 from bokeh.plotting import figure
 from bokeh.server.server import Server
+from flask import session, app
 from tornado.ioloop import IOLoop
 
 from controller import Controller
 
 
 def bkapp(doc):
+    """Zwraca wykres i slidery"""
 
-    c = Controller()
-    c.simulate()
+    controller = Controller()
+    controller.simulate()
+    cds = controller.get_simulation_result()
 
-    x = range(0, len(c.readings) - 1)
-    y = c.readings[:-1]
-
-    cds = pd.DataFrame({'Czas': x, 'Poziom': y})
-
-    source = ColumnDataSource(data=cds)
-
-    plot = figure(y_axis_label='Poziom cieczy (m)', y_range=(0, 2),
+    plot = figure(y_axis_label='Poziom cieczy (m)',
+                  x_axis_label='Krok symulacji',
+                  # y_range=(controller.val_min, controller.val_max),
                   title="Przebieg sterowania")
-    plot.line('Czas', 'Poziom', source=source)
+    ys = [cds['Poziom'], cds['Sygnaly'], cds['Uchyby']]
+    xs = [cds['Krok']] * 3
+    # plot.line('Krok', 'Poziom', source=source)
+    data_dict = {
+        'xs': xs,
+        'ys': ys,
+        'labels': ['Poziom', 'Sygnaly', 'Uchyby'],
+        'line_color': ['#ff0000', '#00ff00', '#0000ff']
+    }
+    source = ColumnDataSource(data=data_dict)
+
+    plot.multi_line(xs='xs', ys='ys', line_color='line_color', legend='labels', source=source)
 
     def callback(attr, old, new):
         if new == 1.5:
-            data = cds
+            data = data_dict
         else:
-            c.val_ust = new
-            c.simulate()
-            x_ = range(0, len(c.readings) - 1)
-            y_ = c.readings[:-1]
-            data = pd.DataFrame({'Czas': x_, 'Poziom': y_})
+            controller.val_ust = new
+            controller.simulate()
+            cds_ = controller.get_simulation_result()
+            ys_ = [cds_['Poziom'], cds_['Sygnaly'], cds_['Uchyby']]
+            xs_ = [cds_['Krok']] * 3
+            data = {
+                'xs': xs_,
+                'ys': ys_,
+                'labels': ['Poziom', 'Sygnaly', 'Uchyby'],
+                'line_color': ['#ff0000', '#00ff00', '#0000ff']
+            }
         source.data = data
 
-    slider = Slider(start=0, end=2, value=1.5, step=0.1, title="Poziom docelowy")
+    slider = Slider(start=controller.val_min,
+                    end=controller.val_max,
+                    value=controller.val_ust,
+                    step=0.1,
+                    title="Poziom docelowy")
     slider.on_change('value_throttled', callback)
 
     doc.add_root(column(slider, plot))

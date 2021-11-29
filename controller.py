@@ -1,3 +1,5 @@
+import pandas as pd
+
 from regulator import Regulator
 from sensor import Sensor
 
@@ -18,7 +20,7 @@ class Controller:
     """Czujnik wykonujący pomiary"""
     _val_min: float = 0
     """Minimalna wartość pomiaru"""
-    _val_max: float = 10
+    _val_max: float = 2
     """Maksymalna wartość pomiaru"""
 
     # Pomieszczenie
@@ -88,4 +90,19 @@ class Controller:
         b = self._qd_min - a * self._u_min               # wyraz wolny
         return a * signal + b
 
+    def get_simulation_result(self):
+        return pd.DataFrame({
+            'Krok': range(0, len(self.readings) - 1),
+            'Poziom': self.readings[:-1],
+            'Sygnaly': self.inputs,
+            'Uchyby': self.deviations[:-1]
+        })
+
+    @property
+    def val_min(self):
+        return self._val_min
+
+    @property
+    def val_max(self):
+        return self._val_max
 
