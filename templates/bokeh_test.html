@@ -7,8 +7,13 @@
 {% endblock %}
 {% block content %}
     {{ super() }}
-    <div>
-    {{ script|indent(4)|safe }}
+    <div class="about fs-5 text-center m-5">
+            Tutaj możesz zobaczyć w jaki sposób działa nasz system.
+        </div>
+    <div class="d-flex d-row justify-content-center m-5">
+        <div>
+            {{ script|indent(4)|safe }}
+        </div>
     </div>
-    <a href="{{ url_for('index') }}"><<< Powrót</a>
+    
 {% endblock %}
