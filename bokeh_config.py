@@ -1,6 +1,6 @@
 import pandas as pd
-from bokeh.layouts import column
-from bokeh.models import ColumnDataSource, Slider
+from bokeh.layouts import column, layout, row, grid
+from bokeh.models import ColumnDataSource, Slider, LayoutDOM, Panel, Tabs
 from bokeh.plotting import figure
 from bokeh.server.server import Server
 from flask import session, app
@@ -50,14 +50,32 @@ def bkapp(doc):
             }
         source.data = data
 
-    slider = Slider(start=controller.val_min,
-                    end=controller.val_max,
-                    value=controller.val_ust,
-                    step=0.1,
-                    title="Poziom docelowy")
-    slider.on_change('value_throttled', callback)
+    sl_vasl_ust = Slider(start=controller.val_min,
+                         end=controller.val_max,
+                         value=controller.val_ust,
+                         step=0.1,
+                         title="Poziom docelowy")
+    sl_vasl_ust.on_change('value_throttled', callback)
+    # slider = [ sl_vasl_ust ]
 
-    doc.add_root(column(slider, plot))
+    sl_test: LayoutDOM = Slider(start=0,
+                     end=5,
+                     value=2.5,
+                     step=0.1,
+                     title="Test")
+
+    l1 = layout([[sl_vasl_ust]])
+    l2 = layout(sl_test)
+    t1 = Panel(child=l1, title="Tab 1")
+    t2 = Panel(child=l2, title="Tab 2")
+    tabs = Tabs(tabs=[t1, t2])
+
+    doc_layout = grid([
+        [row(tabs, plot)]
+    ],
+        sizing_mode='stretch_width')
+
+    doc.add_root(doc_layout)
 
 
 def bk_worker():
