@@ -48,6 +48,24 @@ class Controller:
     inputs: list = []
     """Lista wartości 'wpływów' do układu"""
 
+    # Symulacja 2
+    u1: float = 0.2
+    """współczynnik przenikania ciepła przez ściany [W/(m2*K)] - na razie podany maxymalny"""
+    u2: float = 0.9
+    """współczynnik przenikania ciepła przez okno [W/(m2*K)] - na razie podany maxymalny"""
+    temp_length = 10
+    temp_width = 10
+    temp_height = 3
+    num_window = 1
+    t_outside = 0
+    """temp parametry"""
+    open_wind = 0.2
+    """współczynnik otwarcia okna"""
+    s2: float = 1.6 * 0.5
+    """powierzchnia okna (wymiany ciepła) [m2]"""
+    s1: float = (2 * temp_height*temp_length + 2 * temp_width * temp_height) - (num_window * s2)
+    """powierzchnia ściany (wymiany ciepła) [m2]"""
+
     def __init__(self):
         self._regulator = Regulator(u_min=self._u_min, u_max=self._u_max)
         self._sensor = Sensor(val_min=self._val_min, val_max=self._val_max)
@@ -66,8 +84,11 @@ class Controller:
         input_ = self._signal_to_input(signal)
         self.inputs.append(input_)
 
+        # # Straty ciepła
+        wasted = float(((self.u1 * self.s1) + (self.open_wind * self.u2 * self.s2)) * (self.readings[-1] - self.t_outside))
+
         # # Odczytaj aktualny poziom
-        reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, t_p=self.t_p)
+        reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, q_s=wasted, t_p=self.t_p)
         self.readings.append(reading)
 
     def simulate(self):

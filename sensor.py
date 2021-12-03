@@ -20,22 +20,28 @@ class Sensor:
         self._val_min = val_min
         self._val_max = val_max
 
-    def read(self, prev_val: float, q_d: float, t_p: float) -> float:
+    def read(self, prev_val: float, q_d: float, q_s: float, t_p: float) -> float:
         """
         Wykonuje odczyt na podstawie równania różnicowego
         :param prev_val: wartość poprzedniego odczytu
-        :param q_d: wartość obecnego wpływu do układu (np. obecna przepustowość pompy, moc grzejnika)
+        :param q_d: wartość obecnego wpływu do układu (cipło dostarczane)
+        :param q_s: wartość obecnego wypływu z układu (straty cipła)
         :param t_p: okres próbkowania symulacji
         :return: wartość nowego odczytu
         """
         # TODO: zaimplementować logikę dla pomieszczenia i temperatury
-        # Chwilowo skopiowany kod zbiornika
-        a = 1.5
-        """Pole powierzchni dna zbiornika [m2] - przykład docstringa"""
-        beta = 0.035
-        """Wpółczynnik wypływu [m^(5/2)/s]"""
+        # Chwilowo zadeklarowane zmienne
+        length = 10
+        width = 10
+        height = 3
+        """wielkości powieszczenia [m]"""
+        c = 1005
+        """ciepło włąściwe powietrza [J / kg*K]"""
+        d = 1.2
+        """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
+        volume = length * width * height
 
-        reading = float(1 / a * (-beta * sqrt(prev_val) + q_d) * t_p + prev_val)
+        reading = float(((q_d - q_s) / c * d * volume) * t_p + prev_val)
 
         if reading > self._val_max or reading < self._val_min:
             # print("[!] Wartość pomiaru przekracza ekstremum")
