@@ -17,6 +17,9 @@ def index():
     """Home"""
     return render_template("index.html")
 
+@views.route('/opinie')
+def opinie():
+    return render_template("opinions.html")
 
 # Test
 @views.route('/bokeh')
