@@ -38,20 +38,21 @@ zewnątrz jest niższa niż temperatura docelowa.
 <table><tr><td> T(0) = T<sub>0</sub> </td></tr></table>
 <table><tr><td> T(n+1) = ((Q<sub>d</sub>(n) - Q<sub>S</sub>(n))*T<sub>p</sub>) / (c*d*V) + T(n) </td></tr></table>
 
+
+
 ##### Legenda do obliczeń:
-```
-η - poprawność  urządzenia
-P - maksymalna moc urządzenia
-u(n) - sygnał z regulatora
-Q(n) - Ciepło dostarczone do pomieszczenia
-U<sub>1</sub> - współczynnik przenikania ciepła przez ściany
-U<sub>2</sub> - współczynnik przenikania ciepła przez okno
-S<sub>1</sub> - powierzchnia ściany (wymiany ciepła)
-S<sub>2</sub> - powierzchnia okna (wymiany ciepła)
-x - współczynnik  otwarcia okna
-T(n) - poprzednia temperaura
-T<sub>Z</sub> - temperatura na zawnąrz
-T<sub>0</sub> - temperatura początkowa pomieszczenia
-c - ciepło właściwe powietrza
-d - gęstość powietrza
-```
+
+η - poprawność  urządzenia  
+P - maksymalna moc urządzenia  
+u(n) - sygnał z regulatora  
+Q(n) - Ciepło dostarczone do pomieszczenia  
+U<sub>1</sub> - współczynnik przenikania ciepła przez ściany  
+U<sub>2</sub> - współczynnik przenikania ciepła przez okno  
+S<sub>1</sub> - powierzchnia ściany (wymiany ciepła)  
+S<sub>2</sub> - powierzchnia okna (wymiany ciepła)  
+x - współczynnik  otwarcia okna  
+T(n) - poprzednia temperaura  
+T<sub>Z</sub> - temperatura na zawnąrz  
+T<sub>0</sub> - temperatura początkowa pomieszczenia  
+c - ciepło właściwe powietrza  
+d - gęstość powietrza  
