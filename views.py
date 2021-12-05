@@ -4,6 +4,7 @@ from flask import Blueprint, render_template
 from bokeh.embed import components, server_document
 from bokeh.plotting import Figure
 from bokeh.resources import INLINE
+from bokeh_config import bokeh_port
 from tornado.ioloop import IOLoop
 
 from controller import Controller
@@ -17,9 +18,11 @@ def index():
     """Home"""
     return render_template("index.html")
 
+
 @views.route('/opinie')
 def opinie():
     return render_template("opinions.html")
+
 
 # Test
 @views.route('/bokeh')
@@ -31,7 +34,7 @@ def bokeh():
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
 
-    script = server_document('http://localhost:5006/bkapp')  # , div = components(p)
+    script = server_document(f'http://localhost:{bokeh_port}/bkapp')  # , div = components(p)
 
     return render_template('bokeh_test.html',
                            script=script,

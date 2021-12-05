@@ -8,6 +8,8 @@ from tornado.ioloop import IOLoop
 
 from controller import Controller
 
+bokeh_port = 5001
+
 
 def bkapp(doc):
     """Zwraca wykres i slidery"""
@@ -79,6 +81,6 @@ def bkapp(doc):
 
 
 def bk_worker():
-    server = Server({'/bkapp': bkapp}, io_loop=IOLoop(), allow_websocket_origin=["localhost:5000"])
+    server = Server({'/bkapp': bkapp}, io_loop=IOLoop(), allow_websocket_origin=["localhost:5000"], port=bokeh_port)
     server.start()
     server.io_loop.start()
