@@ -27,20 +27,19 @@ class Sensor:
         :param t_p: okres próbkowania symulacji
         :return: wartość nowego odczytu
         """
-        # TODO: zaimplementować logikę dla pomieszczenia i temperatury
+
         # Chwilowo zadeklarowane zmienne
         length = 10
         width = 10
         height = 3
         """wielkości powieszczenia [m]"""
-        c = 1005 * (1/273.15)
-        """ciepło włąściwe powietrza [J / kg*K]"""
+        c = 1005 / 273.15
+        """ciepło włąściwe powietrza [J / kg*K] -> st.C"""
         d = 1.2
         """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
         volume = length * width * height
 
         reading = float(((q_d - q_s) / c * d * volume) * t_p + prev_val)
-
         if reading > self._val_max or reading < self._val_min:
             # print("[!] Wartość pomiaru przekracza ekstremum")
             reading = max(reading, self._val_min)
