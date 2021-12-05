@@ -6,14 +6,15 @@ def run():
     """Wykonuje kod w ramach testów"""
     c = Controller()
     c.simulate()
+    cds = c.get_simulation_result()
 
     # plotting
-    x = range(0, len(c.readings)-1)
+    x = cds['Krok']
 
     fig, axs = plt.subplots(3)
-    axs[0].plot(x, c.readings[:-1])
-    axs[1].plot(x, c.inputs)
-    axs[2].plot(x, c.signals)
+    axs[0].plot(x, cds['Poziom'])
+    axs[1].plot(x, cds['Sygnaly'])
+    axs[2].plot(x, cds['Uchyby'])
 
     plt.show()
 
