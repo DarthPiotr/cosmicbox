@@ -1,5 +1,3 @@
-from math import sqrt
-
 
 class Sensor:
     """Czujnik temperatury wykonujący pomiary"""
@@ -35,7 +33,7 @@ class Sensor:
         width = 10
         height = 3
         """wielkości powieszczenia [m]"""
-        c = 1005
+        c = 1005 * (1/273.15)
         """ciepło włąściwe powietrza [J / kg*K]"""
         d = 1.2
         """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
