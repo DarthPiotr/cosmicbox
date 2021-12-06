@@ -15,7 +15,7 @@ app.register_blueprint(views)
 # Start bokeh
 Thread(target=bk_worker).start()
 
-test.run()
+# test.run()
 
 
 
