@@ -3,10 +3,12 @@
 {% block content %}
 {{ super() }}
 
-<section>
+<!-- <section>
+
+    <div class="fs-2 my-4">Zaufaj innym naszym klientom!!!</div>
+
     <div class="row m-5 d-flex">
         <div class="col-6">
-            <div class="fs-2 my-4">Zaufaj innym naszym klientom!!!</div>
             <div>Nie wierzysz w jakość naszego systemu? Nie musisz! Uwierz klientom którzy już wypróbowali nasz system!
             </div>
             <div>Przetestowałeś nasz system i chcesz podzielić się opiniom? Napisz do nas na adres przemysł4.0@tenemailnieistenieje.com. Jeśli twoja opinią nam się spodoba umieścimy ją na stronie!</div>
@@ -16,13 +18,56 @@
             <img class="rounded w-100" src="{{ url_for('static',filename='media/meme.jpg') }}">
         </div>
     </div>
+</section> -->
+<section>
+    <div id="carouselExampleInterval " class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner ">
+          <div class="carousel-item active caro rounded" data-bs-interval="3000">
+            <div class="row my-3">
+                <div class="col-1"></div>
+                <div class="col-5 mt-5 text1">
+                    <h1 class="text-center my-5">Kiedyś było mi zimno!</h1>        
+                    <div class="text-center">Ciągle tylko wiało i wiało. Zimno było, stukało w grzejniczku. Paskuda straszna. Na 5 za ciepło, na 2 za zimno. Chory byłem co 2 tygodnie i tyle mi z tego przyszlo.
+                    </div>        
+                    <div class="m-5 text-end">Pan Harold ze Świnoujścia</div>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <img class="rounded img1" src="{{ url_for('static',filename='media/meme2.jpg') }}">
+                </div>
+            </div>
+          </div>
+          <div class="carousel-item caro rounded" data-bs-interval="3000">
+            <div class="row my-3">
+                <div class="col-1"></div>
+                <div class="col-5 mt-5 text1">
+                    <h1 class="text-center my-5">Teraz jest mi ciepło!</h1>     
+                    <div class="text-center">Dzięki automatycznego systemowi regulacji temperatury firmy Przemysł 4.0 odczuwam ciepełko!. System działa cichutko, przyjemniutko. Codziennie ze szczęścia pijam kakałko!.</div>       
+                    <div class="m-5 text-end">Pan Harold ze Świnoujścia</div>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <img class="rounded img1" src="{{ url_for('static',filename='media/meme.jpg') }}">
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
 </section>
 
 <section>
+    <div class="text-center fs-3 mt-4 mb-4">
+        Zostaw nam opinię!
+    </div>
+    <div class="text-center">Opinię możesz zostawic wysyłając nam maila na adres przemysł4.0@tenemailnieistenieje.com! Jeżeli nam się spodoba to może umoeścimy ją stronie!</div>
+</section>
+
+
+<!-- <section>
     <div class="m-5 rounded border border-1">
         <div class="fs-4 text-center">Nigdy nie było mi tak ciepło!</div>
         <div class="text-end">Hania z Opola</div>
     </div>
-</section>
+</section> -->
 
 {% endblock %}

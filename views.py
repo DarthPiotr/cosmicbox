@@ -23,6 +23,13 @@ def index():
 def opinie():
     return render_template("opinions.html")
 
+@views.route('/projekt')
+def projekt():
+    return render_template("project.html")
+
+@views.route('/cennik')
+def cennik():
+    return render_template("prices.html")
 
 # Test
 @views.route('/bokeh')
