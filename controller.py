@@ -33,7 +33,7 @@ class Controller:
 
     _qd_min: float = 0.0
     """Minimalne otwarcie zaworu (moc grzejnika)"""
-    _qd_max: float = 5.0
+    _qd_max: float = 1000.0
     # 0.05
     """Maksymalne otwarcie zaworu (moc grzejnika)"""
 
@@ -52,7 +52,7 @@ class Controller:
     """Lista wartości 'wpływów' do układu"""
 
     # Symulacja 2 - temp
-    u1: float = 0.2 / 237.15
+    u1: float = 2 / 237.15
     # 1 - 0.2
     """współczynnik przenikania ciepła przez ściany [W/(m2*K)] -> st.C - na razie podany maxymalny"""
     u2: float = 0.9 / 273.15

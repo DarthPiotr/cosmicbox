@@ -7,7 +7,7 @@ class Regulator:
     """Minimalne napięcie wyjściowe"""
     _k_p: float = 0.015
     """Wzmocnienie regulatora"""
-    _t_i: float = 0.05
+    _t_i: float = 0.05  # 0.05
     """Czas zdwojenia"""
     _t_d: float = 0.25
     """Czas wyprzedzenia"""
@@ -16,7 +16,7 @@ class Regulator:
                  u_min: float = 0,
                  u_max: float = 10,
                  k_p: float = 0.015,
-                 t_i: float = 0.05,
+                 t_i: float = 0.005,
                  t_d: float = 0.25):
         """
         Konstruktor z domyślnymi wartościami parametrów
