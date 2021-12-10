@@ -1,3 +1,5 @@
+from parameters import Parameter
+
 
 class Sensor:
     """Czujnik temperatury wykonujący pomiary"""
@@ -27,19 +29,13 @@ class Sensor:
         :param t_p: okres próbkowania symulacji
         :return: wartość nowego odczytu
         """
-
-        # Chwilowo zadeklarowane zmienne
-        length = 5  # 10
-        width = 5  # 10
-        height = 3
-        """wielkości powieszczenia [m]"""
-        c = 1005 / 273.15
-        """ciepło włąściwe powietrza [J / kg*K] -> st.C"""
-        d = 1.2
-        """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
-        volume = length * width * height
+        volume = Parameter.length * Parameter.width * Parameter.height
 
         q_s = 1000*q_s
+
+        # # Straty ciepła
+        wasted = float(
+            ((Parameter.u1 * Parameter.s1) + (Parameter.open_wind * Parameter.u2 * Parameter.s2)) * (prev_val - Parameter.t_outside))
 
         reading = float(((q_d - q_s) / (c * d * volume)) * t_p + prev_val)
         if reading > self._val_max or reading < self._val_min:
