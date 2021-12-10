@@ -37,7 +37,7 @@ class Sensor:
         wasted = float(
             ((Parameter.u1 * Parameter.s1) + (Parameter.open_wind * Parameter.u2 * Parameter.s2)) * (prev_val - Parameter.t_outside))
 
-        reading = float(((q_d - q_s) / (c * d * volume)) * t_p + prev_val)
+        reading = float(((q_d - q_s) / (Parameter.c * Parameter.d * volume)) * t_p + prev_val)
         if reading > self._val_max or reading < self._val_min:
             # print("[!] Wartość pomiaru przekracza ekstremum")
             reading = max(reading, self._val_min)

@@ -7,6 +7,7 @@ from flask import session, app
 from tornado.ioloop import IOLoop
 
 from controller import Controller
+from parameters import Parameter
 
 bokeh_port = 5001
 
@@ -39,7 +40,7 @@ def bkapp(doc):
         if new == 1.5:
             data = data_dict
         else:
-            controller.val_ust = new
+            Parameter.val_ust = new
             controller.simulate()
             cds_ = controller.get_simulation_result()
             ys_ = [cds_['Poziom'], cds_['Sygnaly'], cds_['Uchyby']]
@@ -54,7 +55,7 @@ def bkapp(doc):
 
     sl_vasl_ust = Slider(start=controller.val_min,
                          end=controller.val_max,
-                         value=controller.val_ust,
+                         value=Parameter.val_ust,
                          step=0.1,
                          title="Poziom docelowy")
     sl_vasl_ust.on_change('value_throttled', callback)

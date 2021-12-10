@@ -84,6 +84,12 @@ class Controller:
         self.deviations.append(deviation)
 
         # # Oblicz wartość sygnału sterującego i dodaj do listy
+        # signal = self._regulator.pid_positional(self.deviations, self.t_p)
+        # ds = self._regulator.pid_incremental(self.deviations[-1], self.deviations[-2], self.t_p)
+        # if self.signals:
+        #     signal = self.signals[-1] + ds
+        # else:
+        #     signal = ds
         signal = self._regulator.pid_positional(self.deviations, Parameter.t_p)
         self.signals.append(signal)
 
