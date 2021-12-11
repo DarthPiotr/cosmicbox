@@ -20,24 +20,24 @@ class Sensor:
         self._val_min = val_min
         self._val_max = val_max
 
-    def read(self, prev_val: float, q_d: float, q_s: float, t_p: float) -> float:
+    def read(self, prev_val: float, q_d: float, t_p: float) -> float:
         """
         Wykonuje odczyt na podstawie równania różnicowego
         :param prev_val: wartość poprzedniego odczytu
         :param q_d: wartość obecnego wpływu do układu (cipło dostarczane)
-        :param q_s: wartość obecnego wypływu z układu (straty cipła)
         :param t_p: okres próbkowania symulacji
         :return: wartość nowego odczytu
         """
         volume = Parameter.length * Parameter.width * Parameter.height
 
-        q_s = 1000*q_s
+        # q_s = 1000*wasted
 
         # # Straty ciepła
         wasted = float(
-            ((Parameter.u1 * Parameter.s1) + (Parameter.open_wind * Parameter.u2 * Parameter.s2)) * (prev_val - Parameter.t_outside))
+            ((Parameter.u1 * Parameter.s1) + (Parameter.open_wind * Parameter.u2 * Parameter.s2)) * (
+                    prev_val - Parameter.t_outside))
 
-        reading = float(((q_d - q_s) / (Parameter.c * Parameter.d * volume)) * t_p + prev_val)
+        reading = float(((q_d - wasted) / (Parameter.c * Parameter.d * volume)) * t_p + prev_val)
         if reading > self._val_max or reading < self._val_min:
             # print("[!] Wartość pomiaru przekracza ekstremum")
             reading = max(reading, self._val_min)

@@ -97,12 +97,8 @@ class Controller:
         input_ = self._signal_to_input(signal)
         self.inputs.append(input_)
 
-        # # Straty ciepła
-        wasted = float(
-          ((Parameter.u1 * Parameter.s1) + (Parameter.open_wind * Parameter.u2 * Parameter.s2))*(self.readings[-1]-Parameter.t_outside))
-
         # # Odczytaj aktualny poziom
-        reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, q_s=wasted, t_p=Parameter.t_p)
+        reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, t_p=Parameter.t_p)
         self.readings.append(reading)
 
     def simulate(self):
@@ -115,9 +111,9 @@ class Controller:
         for n in range(0, int(step_count + 1)):
             self.make_step()
         print("Aktualny poziom: ", self.readings)
-        print("Uchyb: ", self.deviations)
-        print("Sygnał sterujący: ", self.signals)
-        print("Nastawienie zaworu: ", self.inputs)
+        # print("Uchyb: ", self.deviations)
+        # print("Sygnał sterujący: ", self.signals)
+        # print("Nastawienie zaworu: ", self.inputs)
 
     def _signal_to_input(self, signal: float) -> float:
         """
