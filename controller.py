@@ -25,54 +25,6 @@ class Controller:
     # 2
     """Maksymalna wartość pomiaru"""
 
-    # # Pomieszczenie
-    # val_p: float = 0.0
-    # """Początkowa wartość regulowanego parametru - temperatury"""
-    # val_ust: float = 21.0
-    # # 1.5
-    # """Docelowa wartość regulowanego parametru - temperatury"""
-    #
-    # _qd_min: float = 0.0
-    # """Minimalne otwarcie zaworu (moc grzejnika)"""
-    # _qd_max: float = 1000.0
-    # # 0.05
-    # """Maksymalne otwarcie zaworu (moc grzejnika)"""
-
-    # Symulacja
-    # t_p: float = 0.01
-    # """Okres próbkowania [s]"""
-    # t_sim: float = 18
-    # """Czas symulacji [s]"""
-    readings: list = []
-    """Lista odczytów"""
-    signals: list = []
-    """Lista wygnałów sterujących"""
-    deviations: list = []
-    """Lista uchybów"""
-    inputs: list = []
-    """Lista wartości 'wpływów' do układu"""
-
-    # # Symulacja 2 - temp
-    # u1: float = 2 / 237.15
-    # # 1 - 0.2
-    # """współczynnik przenikania ciepła przez ściany [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    # u2: float = 0.9 / 273.15
-    # """współczynnik przenikania ciepła przez okno [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    # temp_length = 10
-    # temp_width = 10
-    # temp_height = 3
-    # num_window = 1
-    # t_outside = 0
-    # """temp parametry"""
-    # open_wind = 0.2
-    # """współczynnik otwarcia okna"""
-    # s2: float = 1.6 * 0.5
-    # """powierzchnia okna (wymiany ciepła) [m2]"""
-    # s1: float = (2 * temp_height*temp_length + 2 * temp_width * temp_height) - (num_window * s2)
-    # """powierzchnia ściany (wymiany ciepła) [m2]"""
-    # efficiency = 0.8
-    # """sprawność urządzenia w przedziale (0; 1)"""
-
     def __init__(self):
         self._regulator = Regulator(u_min=self._u_min, u_max=self._u_max)
         self._sensor = Sensor(val_min=self._val_min, val_max=self._val_max)
