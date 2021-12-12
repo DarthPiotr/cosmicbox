@@ -60,7 +60,7 @@ class Parameter:
     """Czas wyprzedzenia"""
 
     # Sensor
-    val_min: float = 0
+    val_min: float = -20
     """Minimalna wartość pomiaru"""
     val_max: float = 50
     """Maksymalna wartość pomiaru"""
@@ -69,8 +69,8 @@ class Parameter:
         return {
             "Pokój": {
                 # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
-                "Temperatura początkowa [℃]":   [self.val_p, self.val_min, self.val_max, 0.1, "val_p"],
-                "Temperatura docelowa [℃]":     [self.val_ust, self.val_min, self.val_max, 0.1, "val_ust"]
+                "Temperatura początkowa [℃]":   [self.val_p, 0, 35, 0.1, "val_p"],
+                "Temperatura docelowa [℃]":     [self.val_ust, 0, 35, 0.1, "val_ust"]
             },
             # "Sensor": {
             #

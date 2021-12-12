@@ -60,7 +60,7 @@ class Regulator:
 
         return u
 
-    def pid_incremental(self, current_e: float, previous_e: float, t_p: int):
+    def pid_incremental(self, current_e: float, previous_e: float, t_p: float):
         """
         Algorytm sterowania PID (przyrostowy)
         :param current_e: obecny uchyb
