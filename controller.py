@@ -124,8 +124,8 @@ class Controller:
         :param signal: Sygnał napięciowy otrzymany z regulatora
         :return: dopływ do systemu odpowiadający sygnałowi
         """
-        a = (self.params.qd_max - self.params.qd_min) / (self._u_max - self._u_min)  # wspolczynnik kierunkowy
-        b = self.params.qd_min - a * self._u_min               # wyraz wolny
+        a = (self.params.qd_max - self.params.qd_min) / (self.params.u_max - self.params.u_min)  # wspolczynnik kierunkowy
+        b = self.params.qd_min - a * self.params.u_min               # wyraz wolny
 
         return a * signal + b
         # return self.efficiency * self._qd_max * signal

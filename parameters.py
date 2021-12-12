@@ -2,7 +2,7 @@ class Parameter:
     """Zbiór wszystkich parametrów"""
 
     # Pomieszczenie
-    val_p: float = 0.0
+    val_p: float = 17.0
     """Początkowa wartość regulowanego parametru - temperatury"""
     val_ust: float = 21.0
     # 1.5
@@ -24,10 +24,10 @@ class Parameter:
     d = 1.2
     """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
 
-    u1: float = 2 / 237.15
+    u1: float = 10 / 237.15
     # 1 - 0.2
     """współczynnik przenikania ciepła przez ściany [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    u2: float = 0.9 / 273.15
+    u2: float = 20 / 273.15  # 0.9 / 273.15
     """współczynnik przenikania ciepła przez okno [W/(m2*K)] -> st.C - na razie podany maxymalny"""
     num_window = 1
     t_outside = 0
@@ -44,7 +44,7 @@ class Parameter:
     # Symulacja
     t_p: float = 0.01
     """Okres próbkowania [s]"""
-    t_sim: float = 18
+    t_sim: float = 100
     """Czas symulacji [s]"""
 
     # Regulator
@@ -62,15 +62,15 @@ class Parameter:
     # Sensor
     val_min: float = 0
     """Minimalna wartość pomiaru"""
-    val_max: float = 10
+    val_max: float = 50
     """Maksymalna wartość pomiaru"""
 
     def get_parameters_dictionary(self):
         return {
             "Pokój": {
                 # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
-                "Temperatura początkowa [℃]":   [self.val_p, 0, 50, 0.1, "val_p"],
-                "Temperatura docelowa [℃]":     [self.val_ust, 0, 50, 0.1, "val_ust"]
+                "Temperatura początkowa [℃]":   [self.val_p, self.val_min, self.val_max, 0.1, "val_p"],
+                "Temperatura docelowa [℃]":     [self.val_ust, self.val_min, self.val_max, 0.1, "val_ust"]
             },
             # "Sensor": {
             #

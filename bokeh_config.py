@@ -1,15 +1,11 @@
 from functools import partial
-
-import pandas as pd
-from bokeh.layouts import column, layout, row, grid
-from bokeh.models import ColumnDataSource, Slider, LayoutDOM, Panel, Tabs
+from bokeh.layouts import column, row, grid
+from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem
 from bokeh.plotting import figure
 from bokeh.server.server import Server
-from flask import session, app
 from tornado.ioloop import IOLoop
 
 from controller import Controller
-from parameters import Parameter
 
 bokeh_port = 5001
 
@@ -28,22 +24,29 @@ def bkapp(doc):
     controller.simulate()
     cds = controller.get_simulation_result()
 
-    plot = figure(y_axis_label='Poziom cieczy (m)',
+    plot = figure(y_axis_label='Temperatura pomieszczenia [℃]',
                   x_axis_label='Krok symulacji',
-                  # y_range=(controller.val_min, controller.val_max),
+                  y_range=(-controller.params.val_max * 1.1, controller.params.val_max * 1.1),
                   title="Przebieg sterowania")
-    ys = [cds['Poziom'], cds['Sygnaly'], cds['Uchyby']]
-    xs = [cds['Krok']] * 3
-    # plot.line('Krok', 'Poziom', source=source)
-    data_dict = {
-        'xs': xs,
-        'ys': ys,
-        'labels': ['Poziom', 'Sygnaly', 'Uchyby'],
-        'line_color': ['#ff0000', '#00ff00', '#0000ff']
-    }
-    source = ColumnDataSource(data=data_dict)
+    plot.extra_y_ranges = {"y_inputs": Range1d(start=controller.params.qd_min - 10,
+                                               end=controller.params.qd_max * 1.1)}
+    plot.add_layout(LinearAxis(y_range_name='y_inputs', axis_label='Moc grzejnika [W]'), 'right')
 
-    plot.multi_line(xs='xs', ys='ys', line_color='line_color', legend='labels', source=source)
+    data_dict_temp, data_dict_input = dict_from_cds(cds)
+    source_temp = ColumnDataSource(data=data_dict_temp)
+    source_input = ColumnDataSource(data=data_dict_input)
+
+    # plot.multi_line(xs='xs', ys='ys', line_color='line_color', legend='labels', source=source)
+    lines_temp = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_temp)
+    # plot.line(x=xs2, y=ys2, line_color='#00ff00', y_range_name='y_inputs', legend='Sygnały')
+    lines_input = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_input,
+                                  y_range_name='y_inputs')
+    legend = Legend(items=[
+        LegendItem(label='Poziom', renderers=[lines_temp], index=0),
+        LegendItem(label='Uchyby', renderers=[lines_temp], index=1),
+        LegendItem(label='Moc grzejnika', renderers=[lines_input], index=0)
+    ])
+    plot.add_layout(legend)
 
     panels = []
     for category, params in controller.params.get_parameters_dictionary().items():
@@ -60,16 +63,12 @@ def bkapp(doc):
             def callback(attr, old, new, attrname):
                 controller.update_param(attrname, new)
                 controller.simulate()
+
                 cds_ = controller.get_simulation_result()
-                ys_ = [cds_['Poziom'], cds_['Sygnaly'], cds_['Uchyby']]
-                xs_ = [cds_['Krok']] * 3
-                data = {
-                    'xs': xs_,
-                    'ys': ys_,
-                    'labels': ['Poziom', 'Sygnaly', 'Uchyby'],
-                    'line_color': ['#ff0000', '#00ff00', '#0000ff']
-                }
-                source.data = data
+                data_temp_, data_input_ = dict_from_cds(cds_)
+
+                source_temp.data = data_temp_
+                source_input.data = data_input_
 
             slider.on_change('value_throttled', partial(callback, attrname=values[4]))
             sliders.append(slider)
@@ -82,3 +81,18 @@ def bkapp(doc):
         sizing_mode='stretch_width')
 
     doc.add_root(doc_layout)
+
+
+def dict_from_cds(cds):
+    # plot.line('Krok', 'Poziom', source=source)
+    data_dict_temp = {
+        'xs': [cds['Krok']] * 2,
+        'ys': [cds['Poziom'], cds['Uchyby']],
+        'line_color': ['#ff0000', '#0000ff']
+    }
+    data_dict_input = {
+        'xs': [cds['Krok']],
+        'ys': [cds['Sygnaly']],
+        'line_color': ['#00ff00']
+    }
+    return data_dict_temp, data_dict_input
