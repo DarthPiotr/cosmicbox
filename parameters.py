@@ -1,23 +1,6 @@
 class Parameter:
     """Zbiór wszystkich parametrów"""
 
-    # # Regulator
-    # _regulator: Regulator
-    # """Regulator użyty do sterowania"""
-    # _u_min: float = -5.0
-    # """Minimalny sygnał reguratora"""
-    # _u_max: float = 35.0
-    # """Maksymalny sygnał reguratora"""
-    #
-    # # Sensor
-    # _sensor: Sensor
-    # """Czujnik wykonujący pomiary"""
-    # _val_min: float = 0.0
-    # """Minimalna wartość pomiaru"""
-    # _val_max: float = 35.0
-    # # 2
-    # """Maksymalna wartość pomiaru"""
-
     # Pomieszczenie
     val_p: float = 0.0
     """Początkowa wartość regulowanego parametru - temperatury"""
@@ -31,12 +14,6 @@ class Parameter:
     qd_max: float = 1000.0
     # _qd_max = 0.05
     """Maksymalne otwarcie zaworu (moc grzejnika)"""
-
-    # Symulacja
-    t_p: float = 0.01
-    """Okres próbkowania [s]"""
-    t_sim: float = 18
-    """Czas symulacji [s]"""
 
     length = 5
     width = 5
@@ -63,6 +40,49 @@ class Parameter:
     """powierzchnia ściany (wymiany ciepła) [m2]"""
     efficiency = 0.8
     """sprawność urządzenia w przedziale (0; 1)"""
+
+    # Symulacja
+    t_p: float = 0.01
+    """Okres próbkowania [s]"""
+    t_sim: float = 18
+    """Czas symulacji [s]"""
+
+    # Regulator
+    u_max: float = 10
+    """Maksymalne napięcie wyjściowe"""
+    u_min: float = 0
+    """Minimalne napięcie wyjściowe"""
+    k_p: float = 0.015
+    """Wzmocnienie regulatora"""
+    t_i: float = 0.05  # 0.05
+    """Czas zdwojenia"""
+    t_d: float = 0.25
+    """Czas wyprzedzenia"""
+
+    # Sensor
+    val_min: float = 0
+    """Minimalna wartość pomiaru"""
+    val_max: float = 10
+    """Maksymalna wartość pomiaru"""
+
+    def get_parameters_dictionary(self):
+        return {
+            "Pokój": {
+                # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
+                "Temperatura początkowa [℃]":   [self.val_p, 0, 50, 0.1, "val_p"],
+                "Temperatura docelowa [℃]":     [self.val_ust, 0, 50, 0.1, "val_ust"]
+            },
+            # "Sensor": {
+            #
+            # },
+            # "Regulator": {
+            #
+            # },
+            "Symulacja": {
+                "Okres próbkowania [s]": [self.t_p, 0.005, 1, 0.005, "t_p"],
+                "Czas symulacji [s]":    [self.t_sim, 10, 100, 10, "t_sim"]
+            }
+        }
 
 
 
