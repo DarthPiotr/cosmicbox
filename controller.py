@@ -81,7 +81,7 @@ class Controller:
         self._sensor = Sensor(params=self.params)
 
     def make_step(self):
-        """Wykonuje jeden krok symulacji (pozycyjnie)"""
+        """Wykonuje jeden krok symulacji (przyrostowo)"""
         # Oblicz uchyb i dodaj do listy
         deviation = self.params.val_ust - self.readings[-1]
         self.deviations.append(deviation)
@@ -93,6 +93,8 @@ class Controller:
             signal = self.signals[-1] + ds
         else:
             signal = ds
+        signal = max(signal, self.params.u_min)
+        signal = min(signal, self.params.u_max)
         # signal = self._regulator.pid_positional(self.deviations, self.params.t_p)
         self.signals.append(signal)
 
@@ -124,8 +126,10 @@ class Controller:
         :param signal: Sygnał napięciowy otrzymany z regulatora
         :return: dopływ do systemu odpowiadający sygnałowi
         """
-        a = (self.params.qd_max - self.params.qd_min) / (self.params.u_max - self.params.u_min)  # wspolczynnik kierunkowy
-        b = self.params.qd_min - a * self.params.u_min               # wyraz wolny
+        # wspolczynnik kierunkowy
+        a = (self.params.qd_max - self.params.qd_min) / (self.params.u_max - self.params.u_min)
+        # wyraz wolny
+        b = self.params.qd_min - a * self.params.u_min
 
         return a * signal + b
         # return self.efficiency * self._qd_max * signal
@@ -139,6 +143,12 @@ class Controller:
         })
 
     def update_param(self, name, value):
+        """
+        Dynamicznie aktualizuje wartość parametru
+        :param name:
+        :param value:
+        :return:
+        """
         setattr(self.params, name, value)
         setattr(self._sensor.params, name, value)
         setattr(self._regulator.params, name, value)

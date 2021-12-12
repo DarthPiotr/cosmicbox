@@ -7,24 +7,12 @@ class Sensor:
     params: Parameter
     """Aktualne wartości parametrów"""
 
-    # _val_min: float = 0
-    # """Minimalna wartość pomiaru"""
-    # _val_max: float = 10
-    # """Maksymalna wartość pomiaru"""
-
-    def __init__(self,
-                 # val_min: float = 0,
-                 # val_max: float = 10
-                 params: Parameter):
+    def __init__(self, params: Parameter):
         """
         Konstruktor z domyślnymi wartościami parametrów
 
         """
         self.params = params
-        # :param val_min:
-        # :param val_max:
-        # self._val_min = val_min
-        # self._val_max = val_max
 
     def read(self, prev_val: float, q_d: float, t_p: float) -> float:
         """
@@ -35,8 +23,6 @@ class Sensor:
         :return: wartość nowego odczytu
         """
         volume = self.params.length * self.params.width * self.params.height
-
-        # q_s = 1000*wasted
 
         # # Straty ciepła
         wasted = float(

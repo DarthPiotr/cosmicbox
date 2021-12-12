@@ -1,13 +1,9 @@
 from flask import Blueprint, render_template
 
-
-from bokeh.embed import components, server_document
-from bokeh.plotting import Figure
+from bokeh.embed import server_document
 from bokeh.resources import INLINE
 from bokeh_config import bokeh_port
-from tornado.ioloop import IOLoop
 
-from controller import Controller
 # configure blueprint
 
 views = Blueprint('', __name__)
@@ -23,13 +19,16 @@ def index():
 def opinie():
     return render_template("opinions.html")
 
+
 @views.route('/projekt')
 def projekt():
     return render_template("project.html")
 
+
 @views.route('/cennik')
 def cennik():
     return render_template("prices.html")
+
 
 # Test
 @views.route('/bokeh')
@@ -41,7 +40,7 @@ def bokeh():
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
 
-    script = server_document(f'http://localhost:{bokeh_port}/bkapp')  # , div = components(p)
+    script = server_document(f'http://localhost:{bokeh_port}/bkapp')
 
     return render_template('bokeh_test.html',
                            script=script,
