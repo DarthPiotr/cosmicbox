@@ -29,8 +29,6 @@ class Sensor:
             ((self.params.u1 * self.params.s1) + (self.params.open_wind * self.params.u2 * self.params.s2)) * (
                     prev_val - self.params.t_outside))
 
-        wasted = wasted * 10  # TODO: Usunąć poprzez dobranie właściwych parametrów
-
         reading = float(((q_d - wasted) / (self.params.c * self.params.d * volume)) * t_p + prev_val)
         if reading > self.params.val_max or reading < self.params.val_min:
             # print("[!] Wartość pomiaru przekracza ekstremum")

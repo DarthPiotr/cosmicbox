@@ -20,19 +20,19 @@ class Parameter:
     height = 3
     """wielkości powieszczenia [m]"""
     c = 1005 / 273.15
+    # c = 1005
     """ciepło włąściwe powietrza [J / kg*K] -> st.C"""
     d = 1.2
     """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
 
-    u1: float = 10 / 237.15
-    # 1 - 0.2
-    """współczynnik przenikania ciepła przez ściany [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    u2: float = 20 / 273.15  # 0.9 / 273.15
-    """współczynnik przenikania ciepła przez okno [W/(m2*K)] -> st.C - na razie podany maxymalny"""
+    u1: float = 0.2
+    """współczynnik przenikania ciepła przez ściany [W/(m2*st.C)] - na razie podany maxymalny"""
+    u2: float = 0.9
+    """współczynnik przenikania ciepła przez okno [W/(m2*st.C)] - na razie podany maxymalny"""
     num_window = 1
     t_outside = 0
     """temp parametry"""
-    open_wind = 0.2
+    open_wind = 0.5
     """współczynnik otwarcia okna"""
     s2: float = 1.6 * 0.5
     """powierzchnia okna (wymiany ciepła) [m2]"""
@@ -44,7 +44,7 @@ class Parameter:
     # Symulacja
     t_p: float = 0.01
     """Okres próbkowania [s]"""
-    t_sim: float = 100
+    t_sim: float = 250
     """Czas symulacji [s]"""
 
     # Regulator
