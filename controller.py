@@ -1,4 +1,5 @@
 import pandas as pd
+from numpy import arange
 
 from regulator import Regulator
 from sensor import Sensor
@@ -113,7 +114,7 @@ class Controller:
         self.deviations = [self.params.val_ust - self.params.val_p]
         self.signals = []
         self.inputs = []
-        for n in range(0, int(step_count + 1)):
+        for n in range(0, int(step_count)):
             self.make_step()
         # print("Aktualny poziom: ", self.readings)
         # print("Uchyb: ", self.deviations)
@@ -136,7 +137,7 @@ class Controller:
 
     def get_simulation_result(self):
         return pd.DataFrame({
-            'Krok': range(0, len(self.readings) - 1),
+            'Krok': arange(0, self.params.t_sim, self.params.t_p),
             'Poziom': self.readings[:-1],
             'Sygnaly': self.inputs,
             'Uchyby': self.deviations[:-1]

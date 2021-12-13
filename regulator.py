@@ -7,9 +7,7 @@ class Regulator:
     params: Parameter
     """Aktualne wartości parametrów"""
 
-    def __init__(self,
-                 params: Parameter
-                 ):
+    def __init__(self, params: Parameter):
         """
         Konstruktor z domyślnymi wartościami parametrów
         :param params: obiekt z parametrami
