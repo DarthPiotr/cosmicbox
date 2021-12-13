@@ -26,7 +26,7 @@ class Sensor:
 
         # # Straty ciepła
         wasted = float(
-            ((self.params.u1 * self.params.s1) + (self.params.open_wind * self.params.u2 * self.params.s2)) * (
+            ((self.params.u1 * self.params.s1) + (self.params.num_window * self.params.open_wind * self.params.u2 * self.params.s2)) * (
                     prev_val - self.params.t_outside))
 
         reading = float(((q_d - wasted) / (self.params.c * self.params.d * volume)) * t_p + prev_val)

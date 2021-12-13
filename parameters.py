@@ -20,7 +20,6 @@ class Parameter:
     height = 3
     """wielkości powieszczenia [m]"""
     c = 1005 / 273.15
-    # c = 1005
     """ciepło włąściwe powietrza [J / kg*K] -> st.C"""
     d = 1.2
     """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
@@ -38,13 +37,13 @@ class Parameter:
     """powierzchnia okna (wymiany ciepła) [m2]"""
     s1: float = (2 * height * length + 2 * width * height) - (num_window * s2)
     """powierzchnia ściany (wymiany ciepła) [m2]"""
-    efficiency = 0.8
-    """sprawność urządzenia w przedziale (0; 1)"""
+    # efficiency = 0.8
+    # """sprawność urządzenia w przedziale (0; 1)"""
 
     # Symulacja
     t_p: float = 0.01
     """Okres próbkowania [s]"""
-    t_sim: float = 250
+    t_sim: float = 100
     """Czas symulacji [s]"""
 
     # Regulator
@@ -52,11 +51,12 @@ class Parameter:
     """Maksymalne napięcie wyjściowe"""
     u_min: float = 0
     """Minimalne napięcie wyjściowe"""
-    k_p: float = 0.015
+    k_p: float = 0.0015
     """Wzmocnienie regulatora"""
-    t_i: float = 0.05  # 0.05
+    # t_i: float = 0.05
+    t_i: float = 0.005
     """Czas zdwojenia"""
-    t_d: float = 0.25
+    t_d: float = 0.025
     """Czas wyprzedzenia"""
 
     # Sensor
@@ -69,21 +69,29 @@ class Parameter:
         return {
             "Pokój": {
                 # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
+                "Temperatura na zawnątrz [℃]": [self.t_outside, -30, 30, 1, "t_outside"],
                 "Temperatura początkowa [℃]":   [self.val_p, 0, 35, 0.1, "val_p"],
-                "Temperatura docelowa [℃]":     [self.val_ust, 0, 35, 0.1, "val_ust"]
+                "Temperatura docelowa [℃]":     [self.val_ust, 0, 35, 0.1, "val_ust"],
+                "Ilość okien w pomieszczeniu": [self.num_window, 0, 10, 1, "num_window"],
+                "Wpółczynnik otwarcia okien": [self.open_wind, 0, 1, 0.2, "open_wind"]
             },
-            # "Sensor": {
-            #
-            # },
-            # "Regulator": {
-            #
-            # },
+            "Wymiary pokoju": {
+                "Wysokość [m]": [self.height, 0.5, 7.0, 0.5, "height"],
+                "Szerokość [m]":    [self.width, 0.5, 25.0, 0.5, "width"],
+                "Długość [m]":  [self.length, 0.5, 25.0, 0.5, "length"]
+            },
             "Symulacja": {
                 "Okres próbkowania [s]": [self.t_p, 0.005, 1, 0.005, "t_p"],
-                "Czas symulacji [s]":    [self.t_sim, 10, 100, 10, "t_sim"]
+                "Czas symulacji [s]": [self.t_sim, 10, self.t_sim * 10, 10, "t_sim"]
+            },
+            # "Sensor": {
+            #     "Maksymalna wartość pomiaru": [self.val_max, 0, 50, 1, "val_max"]
+            # },
+            "Regulator": {
+                "Wzmocnienie regulatora": [self.k_p, 0, 0.01, 0.00005, "k_p"],
+                "Czas zdwojenia": [self.t_i, 0, 0.01, 0.00001, "t_i"],
+                # "Czas wyprzedzenia": [self.t_d, 0, 1, 0.005, "t_d"] <- to nic nie zmienia
+                "Maksymalne napięcie wyjściowe": [self.u_max, 0, 25, 1, "u_max"],
+                "Minimalne napięcie wyjściowe": [self.u_min, -10, 10, 1, "u_min"]
             }
         }
-
-
-
-
