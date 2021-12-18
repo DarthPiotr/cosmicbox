@@ -1,3 +1,6 @@
+import math
+import re
+from decimal import Context
 from functools import partial
 from bokeh.layouts import column, row, grid
 from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem
@@ -76,7 +79,8 @@ def bkapp(doc):
                 value=values[0],
                 start=values[1],
                 end=values[2],
-                step=values[3]
+                step=values[3],
+                format=get_format_from_number(values[3])
             )
 
             # Zdefinuj funkcję używaną do zmiany wartości suwakiem
@@ -112,6 +116,22 @@ def bkapp(doc):
 
     # Zwróć widok na stronę
     doc.add_root(doc_layout)
+
+
+def get_format_from_number(step: float):
+    if step >= 1:
+        return '0'
+    res = re.sub('[1-9]', '0', float_to_str(step))
+    return res
+
+
+ctx = Context()
+ctx.prec = 20
+
+
+def float_to_str(a: float):
+    d1 = ctx.create_decimal(repr(a))
+    return format(d1, 'f')
 
 
 def dict_from_cds(cds):
