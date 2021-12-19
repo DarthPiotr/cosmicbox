@@ -2,6 +2,7 @@ import math
 import re
 from decimal import Context
 from functools import partial
+from bokeh.core.enums import SizingMode
 from bokeh.layouts import column, row, grid
 from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem
 from bokeh.plotting import figure
@@ -33,7 +34,7 @@ def bkapp(doc):
                   x_axis_label='Czas symulacji [s]',
                   y_range=Range1d(start=-1,
                                   end=controller.params.val_max * 1.1),
-                  title="Przebieg sterowania")
+                  title="Przebieg sterowania", height=500, sizing_mode="stretch_width")
     # Dodaj prawą oś (mocy grzejnika)
     plot.extra_y_ranges = {"y_inputs": Range1d(
         start=controller.params.qd_min - 10,
