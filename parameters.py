@@ -1,4 +1,9 @@
-class Parameter:
+import json
+from dataclasses import dataclass
+
+
+@dataclass
+class Parameter(object):
     """Zbiór wszystkich parametrów"""
 
     # Pomieszczenie
@@ -64,6 +69,17 @@ class Parameter:
     """Minimalna wartość pomiaru"""
     val_max: float = 50
     """Maksymalna wartość pomiaru"""
+
+    @staticmethod
+    def from_json(filename):
+        with open(filename, 'r') as file:
+            json_data = file.read().rstrip()
+        return Parameter(**json.loads(json_data))
+
+    def to_json(self, filename):
+        json_data = json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        with open(filename, 'w') as file:
+            file.write(json_data)
 
     def get_parameters_dictionary(self):
         return {
