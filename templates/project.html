@@ -2,6 +2,145 @@
 {% block title %}O projekcie{% endblock %}
 {% block content %}
 {{ super() }}
+<h2 class="mt-5 pb-5 bord3 text-center">Regulator temperatury pomieszczenia</h1>
+<h4 class="mt-4">Opis projektu:</h3>
+
+<div class="bord3">
+    <ul>
+        <li> 
+            Pomieszczenie jest idealnym prostopadłościanem bez mebli w środku. Na jednej ze ścian znajduje się okno, które możemy otwierać wedle uznania. Dla uproszczenia obliczeń przyjmujemy, że temperatura jest taka sama w całej objętości pomieszczenia.
+        </li>
+        <li>
+            Straty ciepła zależą od powierzchni i materiału ścian oraz wielkości i stopnia otwarcia okna. Źródło ciepła (grzejnik elektryczny) ogrzewa pomieszczenie równomiernie w całej objętości i jest sterowane przez regulator PID.
+        </li>
+        <li>
+            Wszystkie ściany wykonane są z tego samego materiału. Przyjmujemy założenie, że temperatura na zewnątrz jest niższa niż temperatura docelowa.</div>
+        </li>
+    </ul>
+
+<div class="bord3 pb-3 text-center">
+    <h4 class="mt-4 pb-3 text-start">Schemat:</h4>
+    <img src="../static/media/schemat.png" class="w-75" alt="">
+</div>
+
+<div class="row pb-3">
+    <div class="col">
+        <h4 class="mt-3">Obliczenia:</h4>
+        <div class="mt-3 ms-3">
+            <div class="mt-2">
+                Ciepło dostarczone: 
+                <div class="text-center fs-5">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mrow>
+                            <msub><mi>Q</mi><mn>d</mn></msub>
+                            <mi>(n)</mi>
+                            <mo>=</mo>
+                            
+                            <mi>η</mi><mo>*</mo><mi>P</mi><mo>*</mo><mi>u</mi><mi>(n)</mi>
+                        </mrow>                    
+                    </math>
+                </div> 
+            </div>
+            <div class="mt-2">
+                Straty ciepła:
+                <div class="text-center fs-5">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mrow>
+                            <msub><mi>Q</mi><mn>s</mn></msub>
+                            <mi>(n)</mi>
+                            <mo>=</mo>
+                            
+                            <mi>(</mi>
+                            <msub><mi>U</mi><mn>1</mn></msub>
+                            <msub><mi>S</mi><mn>1</mn></msub>
+                            <mo>+</mo>
+                            <mi>x</mi>
+                            <msub><mi>U</mi><mn>2</mn></msub>
+                            <msub><mi>S</mi><mn>2</mn></msub>
+                            <mi>)</mi>
+    
+                            <mi>(</mi>
+                            <mi>T</mi><mi>(n)</mi>
+                            <mo>-</mo>
+                            <msub><mi>T</mi><mn>z</mn></msub>
+                            <mi>)</mi>
+                        </mrow>                    
+                    </math>
+                </div>
+            </div>
+            <div class="mt-2">
+                Objętość pomieszczenia: 
+                <div class="text-center fs-5">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mrow>
+                            <mi>V</mi>
+                            <mo>=</mo>
+                            
+                            <mi>A</mi><mo>*</mo><mi>B</mi><mo>*</mo><mi>C</mi>
+                        </mrow>                    
+                    </math>
+                </div>
+            </div>
+            <div class="mt-2">
+                Równanie różnicowe: 
+                <div class="text-center fs-5">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mrow>
+                            <mi>T</mi><mi>(0)</mi>
+                            <mo>=</mo>
+                            <msub><mi>T</mi><mn>0</mn></msub>
+                        </mrow>               
+                    </math>
+                    <br>
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" class="mt-2">
+                        <mrow>
+                            <mi>T</mi><mi>(n+1)</mi>
+                            <mo>=</mo>
+                            
+                            
+                            <mi>(</mi><mi>(</mi>
+                            <msub><mi>Q</mi><mn>d</mn></msub><mi>(n)</mi>
+                            <msub><mi>Q</mi><mn>s</mn></msub><mi>(n)</mi>
+                            <mi>)</mi>
+                            <mo>*</mo>
+                            <msub><mi>T</mi><mn>p</mn></msub>
+                            <mi>)</mi>
+    
+                            <mo>/</mo>
+                            <mi>(</mi>
+                            <mi>(</mi>
+                            <mi>c</mi><mo>*</mo><mi>d</mi><mo>*</mo><mi>V</mi>
+                            <mi>)</mi>
+                            <mo>+</mo>
+                            <msub><mi>T</mi><mn>z</mn></msub>
+                            <mi>)</mi>
+    
+                        </mrow>       
+                    </math>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <h4 class="mt-3 mb-2">Legenda do obliczeń:</h4>
+        <div class="mt-3 ms-3">
+            <div>&#951 - poprawność urządzenia</div>
+            <div>P - maksymalna moc urządzenia</div>
+            <div>u(n) - sygnał z regulatora</div>
+            <div>U<sub>1</sub> - współczynnik przenikania ciepła przez ściany</div>
+            <div>U<sub>2</sub> - współczynnik przenikania ciepła przez okno</div>
+            <div>S<sub>1</sub> - powierzchnia ściany (wymiany ciepła)</div>
+            <div>S<sub>2</sub> - powierzchnia okna (wymiany ciepła)</div>
+            <div>x - współczynnik otwarcia okna</div>
+            <div>T(n) - poprzednia temperaura</div>
+            <div>T<sub>z</sub> - temperatura na zawnąrz</div>
+            <div>Q(n) - Ciepło dostarczone do pomieszczenia</div>
+            <div>T<sub>0</sub> - temperatura początkowa pomieszczenia</div>
+            <div>c - ciepło właściwe powietrza</div>
+            <div>d - gęstość powietrza</div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

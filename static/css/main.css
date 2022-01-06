@@ -49,6 +49,11 @@
 
 .bord2 {
     border-bottom: 3px solid rgba(85, 40, 10, 0.411);
+    width: 100%;
+}
+
+.bord3 {
+    border-bottom: 1px solid rgba(85, 40, 10, 0.411);
 }
 
 .img1 {
