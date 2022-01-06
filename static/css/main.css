@@ -74,4 +74,12 @@
 .noUi-connect {
     background-color: rgba(155, 76, 23, 0.829) !important;
 }
-    
+ 
+.git {
+    text-decoration: none;
+    color: rgb(32, 32, 32);
+}
+
+.git:hover {
+    color: rgb(68, 68, 68);
+}
