@@ -104,10 +104,11 @@ class Parameter(object):
             #     "Maksymalna wartość pomiaru": [self.val_max, 0, 50, 1, "val_max"]
             # },
             "Regulator": {
-                "Wzmocnienie regulatora": [self.k_p, 0, 0.01, 0.00005, "k_p"],
-                "Czas zdwojenia": [self.t_i, 0, 0.01, 0.00001, "t_i"],
-                # "Czas wyprzedzenia": [self.t_d, 0, 1, 0.005, "t_d"] <- to nic nie zmienia
-                "Maksymalne napięcie wyjściowe": [self.u_max, 0, 25, 1, "u_max"],
-                "Minimalne napięcie wyjściowe": [self.u_min, -10, 10, 1, "u_min"]
+                "Wzmocnienie regulatora": [self.k_p, 0.00005, 0.01, 0.00005, "k_p"],
+                "Czas zdwojenia": [self.t_i, 0.00001, 0.01, 0.00001, "t_i"],
+                "Czas wyprzedzenia": [self.t_d, 0.005, 3600, 0.005, "t_d"],
+                # "Maksymalne napięcie wyjściowe": [self.u_max, 0, 25, 1, "u_max"],
+                # "Minimalne napięcie wyjściowe": [self.u_min, -10, 10, 1, "u_min"],
+                "Zakres napięć wyjściowych": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
             }
         }

@@ -32,19 +32,22 @@ class Regulator:
 
         return u
 
-    def pid_incremental(self, current_e: float, previous_e: float, t_p: float):
+    def pid_incremental(self, e_list: list[float], t_p: float):
         """
         Algorytm sterowania PID (przyrostowy)
-        :param current_e: obecny uchyb
-        :param previous_e: poprzedni uchyb
+        :param e_list: lista uchybów
         :param t_p: okres próbkowania
         :return: zmiana sygnału napięciowego
         """
-
+        e_len = len(e_list)
+        third_e = e_list[-3] if e_len >= 3 else 0
+        previous_e = e_list[-2] if e_len >= 2 else 0
+        current_e = e_list[-1] if e_len >= 1 else 0
         delta_e = current_e - previous_e
+        diff_e = current_e - 2*previous_e + third_e
 
         # PID
         u = self.params.k_p * (delta_e + ((t_p / self.params.t_i) * current_e) +
-                               ((self.params.t_d / t_p) * delta_e * delta_e))
+                               ((self.params.t_d / t_p) * diff_e))
 
         return u

@@ -1,21 +1,15 @@
 from controller import Controller
-from matplotlib import pyplot as plt
 
 
 def run():
     """Wykonuje kod w ramach testów"""
-    c = Controller()
-    c.simulate()
-    cds = c.get_simulation_result()
+    controller = Controller()
+    controller.update_param("u_min", -3)
+    controller.update_param("u_max", -1)
+    controller.update_param("qd_min", 1)
+    controller.update_param("qd_max", 3)
+    # noinspection PyProtectedMember
+    assert controller._signal_to_input(-2) == 2.0
 
-    # plotting
-    x = cds['Krok']
 
-    fig, axs = plt.subplots(3)
-    axs[0].plot(x, cds['Poziom'])
-    axs[1].plot(x, cds['Sygnaly'])
-    axs[2].plot(x, cds['Uchyby'])
 
-    plt.show()
-
-    print("")

@@ -89,7 +89,7 @@ class Controller:
 
         # # Oblicz wartość sygnału sterującego i dodaj do listy
         # signal = self._regulator.pid_positional(self.deviations, self.params.t_p)
-        ds = self._regulator.pid_incremental(self.deviations[-1], self.deviations[-2], self.params.t_p)
+        ds = self._regulator.pid_incremental(self.deviations, self.params.t_p)
         if self.signals:
             signal = self.signals[-1] + ds
         else:
@@ -128,7 +128,10 @@ class Controller:
         :return: dopływ do systemu odpowiadający sygnałowi
         """
         # wspolczynnik kierunkowy
-        a = (self.params.qd_max - self.params.qd_min) / (self.params.u_max - self.params.u_min)
+        u_range = self.params.u_max - self.params.u_min
+        if u_range == 0:
+            return 0
+        a = (self.params.qd_max - self.params.qd_min) / u_range
         # wyraz wolny
         b = self.params.qd_min - a * self.params.u_min
 
@@ -157,11 +160,3 @@ class Controller:
         setattr(self.params, name, value)
         setattr(self._sensor.params, name, value)
         setattr(self._regulator.params, name, value)
-
-    @property
-    def val_min(self):
-        return self._val_min
-
-    @property
-    def val_max(self):
-        return self._val_max

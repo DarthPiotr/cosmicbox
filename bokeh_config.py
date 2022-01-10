@@ -1,10 +1,10 @@
-import math
 import re
 from decimal import Context
 from functools import partial
-from bokeh.core.enums import SizingMode
+
+from bokeh.io import curdoc
 from bokeh.layouts import column, row, grid
-from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem
+from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem, RangeSlider
 from bokeh.plotting import figure
 from bokeh.server.server import Server
 from tornado.ioloop import IOLoop
@@ -75,19 +75,35 @@ def bkapp(doc):
         # Wczytaj każdy parametr
         for name, values in params.items():
             # Stwórz slider
-            slider = Slider(
-                title=name,
-                value=values[0],
-                start=values[1],
-                end=values[2],
-                step=values[3],
-                format=get_format_from_number(values[3])
-            )
+            if type(values[0]) is tuple:
+                slider = RangeSlider(
+                    title=name,
+                    value=values[0],
+                    start=values[1],
+                    end=values[2],
+                    step=values[3],
+                    format=get_format_from_number(values[3]),
+                    name=values[4]
+                )
+            else:
+                slider = Slider(
+                    title=name,
+                    value=values[0],
+                    start=values[1],
+                    end=values[2],
+                    step=values[3],
+                    format=get_format_from_number(values[3])
+                )
 
             # Zdefinuj funkcję używaną do zmiany wartości suwakiem
+            # noinspection PyUnusedLocal
             def callback(attr, old, new, attrname):
                 # Zaktualizuj parametr i przeprowadź nową symulację
-                controller.update_param(attrname, new)
+                if type(new) is tuple:  # dla RangeSliderów
+                    for i, attr_name in enumerate(attrname.split(",")):
+                        controller.update_param(attr_name, new[i])
+                else:
+                    controller.update_param(attrname, new)
                 controller.simulate()
 
                 # Zaktualizuj źródła danych wykresu
