@@ -160,3 +160,12 @@ class Controller:
         setattr(self.params, name, value)
         setattr(self._sensor.params, name, value)
         setattr(self._regulator.params, name, value)
+
+    def update_params(self, params: Parameter):
+        """
+        Aktualizuje parametry na posdtawie obiektu
+        :param params: obiekt parametrów
+        """
+        self.params = params
+        self._sensor.params = params
+        self._regulator.params = params

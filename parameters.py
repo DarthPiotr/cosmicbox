@@ -20,23 +20,23 @@ class Parameter(object):
     # _qd_max = 0.05
     """Maksymalne otwarcie zaworu (moc grzejnika)"""
 
-    length = 5
-    width = 5
-    height = 3
+    length: float = 5
+    width: float = 5
+    height: float = 3
     """wielkości powieszczenia [m]"""
-    c = 1005 / 273.15
+    c: float = 1005 / 273.15
     """ciepło włąściwe powietrza [J / kg*K] -> st.C"""
-    d = 1.2
+    d: float = 1.2
     """gęstość powietrza w 20 st.C na poziomie morza [kg / m³]"""
 
     u1: float = 0.2
     """współczynnik przenikania ciepła przez ściany [W/(m2*st.C)] - na razie podany maxymalny"""
     u2: float = 0.9
     """współczynnik przenikania ciepła przez okno [W/(m2*st.C)] - na razie podany maxymalny"""
-    num_window = 1
-    t_outside = 0
+    num_window: float = 1
+    t_outside: float = 0
     """temp parametry"""
-    open_wind = 0.5
+    open_wind: float = 0.5
     """współczynnik otwarcia okna"""
     s2: float = 1.6 * 0.5
     """powierzchnia okna (wymiany ciepła) [m2]"""

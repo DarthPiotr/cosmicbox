@@ -2,14 +2,16 @@ import re
 from decimal import Context
 from functools import partial
 
-from bokeh.io import curdoc
+from os import listdir
 from bokeh.layouts import column, row, grid
-from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem, RangeSlider
+from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem, RangeSlider, \
+    Button
 from bokeh.plotting import figure
 from bokeh.server.server import Server
 from tornado.ioloop import IOLoop
 
 from controller import Controller
+from parameters import Parameter
 
 bokeh_port = 5001
 
@@ -66,6 +68,31 @@ def bkapp(doc):
     plot.add_layout(legend)
     plot.legend.click_policy = 'hide'
 
+    # Presety
+    buttons = []
+    for file in listdir("./presets"):
+        if file.endswith(".json"):
+            button = Button(label=file[:-5])
+            buttons.append(button)
+
+            def callback_button(event, filename):
+                # Zaktualizuj parametr i przeprowadź nową symulację
+                controller.update_params(Parameter.from_json(filename))
+                controller.simulate()
+
+                # Zaktualizuj źródła danych wykresu
+                cds_ = controller.get_simulation_result()
+                data_temp_, data_deviation_, data_input_ = dict_from_cds(cds_)
+                source_temp.data = data_temp_
+                source_deviation.data = data_deviation_
+                source_input.data = data_input_
+
+                # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
+
+            button.on_click(partial(callback_button, filename="./presets/"+file))
+
+    presets = column(children=buttons)
+
     # Przygotuj parametry na stronie na podstawie słownika
     parameters_dict = controller.params.get_parameters_dictionary()
     panels = []
@@ -97,7 +124,7 @@ def bkapp(doc):
 
             # Zdefinuj funkcję używaną do zmiany wartości suwakiem
             # noinspection PyUnusedLocal
-            def callback(attr, old, new, attrname):
+            def callback_slider(attr, old, new, attrname):
                 # Zaktualizuj parametr i przeprowadź nową symulację
                 if type(new) is tuple:  # dla RangeSliderów
                     for i, attr_name in enumerate(attrname.split(",")):
@@ -114,7 +141,7 @@ def bkapp(doc):
                 source_input.data = data_input_
 
             # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
-            slider.on_change('value_throttled', partial(callback, attrname=values[4]))
+            slider.on_change('value_throttled', partial(callback_slider, attrname=values[4]))
 
             # Dodaj nowy suwak do obecnej kategorii
             sliders.append(slider)
@@ -127,7 +154,7 @@ def bkapp(doc):
 
     # Wygeneruj widok z parametrami i wykresem
     doc_layout = grid([
-        [row(tabs, plot)]
+        [row(column(presets, tabs), plot)]
     ],
         sizing_mode='stretch_width')
 
