@@ -3,10 +3,11 @@ from decimal import Context
 from functools import partial
 
 from os import listdir
+
 from bokeh.layouts import column, row, grid
 from bokeh.models import ColumnDataSource, Slider, Panel, Tabs, Range1d, LinearAxis, Legend, LegendItem, RangeSlider, \
     Button
-from bokeh.plotting import figure
+from bokeh.plotting import figure, curdoc
 from bokeh.server.server import Server
 from tornado.ioloop import IOLoop
 
@@ -14,6 +15,7 @@ from controller import Controller
 from parameters import Parameter
 
 bokeh_port = 5001
+preset_path = "./presets/"
 
 
 def bk_worker():
@@ -28,6 +30,14 @@ def bkapp(doc):
 
     # Stwórz kontroler i przeprowadź symulację
     controller = Controller()
+
+    doc_layout = prepare_layout(controller)
+
+    # Zwróć widok na stronę
+    doc.add_root(doc_layout)
+
+
+def prepare_layout(controller: Controller):
     controller.simulate()
     cds = controller.get_simulation_result()
 
@@ -70,26 +80,28 @@ def bkapp(doc):
 
     # Presety
     buttons = []
-    for file in listdir("./presets"):
+    for file in listdir(preset_path):
         if file.endswith(".json"):
             button = Button(label=file[:-5])
             buttons.append(button)
 
             def callback_button(event, filename):
-                # Zaktualizuj parametr i przeprowadź nową symulację
+                curdoc().clear()
                 controller.update_params(Parameter.from_json(filename))
-                controller.simulate()
+                curdoc().add_root(prepare_layout(controller))
 
-                # Zaktualizuj źródła danych wykresu
-                cds_ = controller.get_simulation_result()
-                data_temp_, data_deviation_, data_input_ = dict_from_cds(cds_)
-                source_temp.data = data_temp_
-                source_deviation.data = data_deviation_
-                source_input.data = data_input_
+                # # Zaktualizuj parametr i przeprowadź nową symulację
+                # controller.simulate()
+                #
+                # # Zaktualizuj źródła danych wykresu
+                # cds_ = controller.get_simulation_result()
+                # data_temp_, data_deviation_, data_input_ = dict_from_cds(cds_)
+                # source_temp.data = data_temp_
+                # source_deviation.data = data_deviation_
+                # source_input.data = data_input_
 
-                # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
-
-            button.on_click(partial(callback_button, filename="./presets/"+file))
+            # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
+            button.on_click(partial(callback_button, filename=preset_path + file))
 
     presets = column(children=buttons)
 
@@ -157,9 +169,7 @@ def bkapp(doc):
         [row(column(presets, tabs), plot)]
     ],
         sizing_mode='stretch_width')
-
-    # Zwróć widok na stronę
-    doc.add_root(doc_layout)
+    return doc_layout
 
 
 def get_format_from_number(step: float):
