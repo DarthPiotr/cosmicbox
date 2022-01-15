@@ -10,7 +10,6 @@ class Sensor:
     def __init__(self, params: Parameter):
         """
         Konstruktor z domyślnymi wartościami parametrów
-
         """
         self.params = params
 
@@ -23,16 +22,21 @@ class Sensor:
         :return: wartość nowego odczytu
         """
         volume = self.params.length * self.params.width * self.params.height
-
+        t_outside = self.cap_temperature(self.params.t_outside)
         # # Straty ciepła
         wasted = float(
-            ((self.params.u1 * self.params.s1)
-             + (self.params.num_window * self.params.open_wind * self.params.u2 * self.params.s2))
-            * (prev_val - self.params.t_outside))
+            ((self.params.u1 * self.params.s1)  # ściany
+             + (self.params.num_window * self.params.open_wind * self.params.u2 * self.params.s2))  # okna
+            * (prev_val - t_outside))
 
         reading = float(((q_d - wasted) / (self.params.c * self.params.d * volume)) * t_p + prev_val)
-        if reading > self.params.val_max or reading < self.params.val_min:
-            # print("[!] Wartość pomiaru przekracza ekstremum")
-            reading = max(reading, self.params.val_min)
-            reading = min(reading, self.params.val_max)
-        return reading
+
+        return self.cap_temperature(reading)
+
+    def cap_temperature(self, temperature):
+        """
+        Ogranicza temperaturę do wartości odczytywanych przez sensor
+        :param temperature: temperatura wejściowa
+        :return: Ograniczona temperatura
+        """
+        return max(self.params.val_min, min(self.params.val_max, temperature))

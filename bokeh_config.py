@@ -166,7 +166,8 @@ def prepare_layout(controller: Controller):
 
     # Wygeneruj widok z parametrami i wykresem
     doc_layout = grid([
-        [row(column(presets, tabs), plot)]
+        # [row(column(presets, tabs), plot)]
+        [row(tabs, plot, presets)]
     ],
         sizing_mode='stretch_width')
     return doc_layout

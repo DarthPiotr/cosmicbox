@@ -153,19 +153,22 @@ class Controller:
     def update_param(self, name, value):
         """
         Dynamicznie aktualizuje wartość parametru
-        :param name:
-        :param value:
-        :return:
+        :param name: nazwa parametru
+        :param value: nowa wartość
         """
         setattr(self.params, name, value)
         setattr(self._sensor.params, name, value)
         setattr(self._regulator.params, name, value)
+        self.params.update_complex_params()
+        self._sensor.params.update_complex_params()
+        self._regulator.params.update_complex_params()
 
     def update_params(self, params: Parameter):
         """
         Aktualizuje parametry na posdtawie obiektu
         :param params: obiekt parametrów
         """
+        params.update_complex_params()
         self.params = params
         self._sensor.params = params
         self._regulator.params = params

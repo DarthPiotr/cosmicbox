@@ -81,34 +81,39 @@ class Parameter(object):
         with open(filename, 'w') as file:
             file.write(json_data)
 
+    def update_complex_params(self):
+        self.s1 = max(0.0, (2 * self.height * self.length + 2 * self.width * self.height) - (self.num_window * self.s2))
+
     def get_parameters_dictionary(self):
         return {
             "Pokój": {
                 # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
-                "Temperatura na zawnątrz [℃]": [self.t_outside, -30, 30, 1, "t_outside"],
-                "Temperatura początkowa [℃]":   [self.val_p, 0, 35, 0.1, "val_p"],
-                "Temperatura docelowa [℃]":     [self.val_ust, 0, 35, 0.1, "val_ust"],
-                "Ilość okien w pomieszczeniu": [self.num_window, 0, 10, 1, "num_window"],
-                "Wpółczynnik otwarcia okien": [self.open_wind, 0, 1, 0.2, "open_wind"]
+                "Temperatura na zawnątrz [℃]": [self.t_outside, -20, 35, 1, "t_outside"],
+                "Temperatura początkowa [℃]": [self.val_p, -20, 35, 0.1, "val_p"],
+                "Temperatura docelowa [℃]": [self.val_ust, -20, 35, 0.1, "val_ust"],
+                "Współczynnik przenikania ścian [W/(m2℃)]": [self.u1, 0.1, 1, 0.1, "u1"],
+                "Współczynnik przenikania okna  [W/(m2℃)]": [self.u2, 1, 100, 1, "u2"],
+                # "Ilość okien w pomieszczeniu": [self.num_window, 0, 10, 1, "num_window"],
+                "Wpółczynnik otwarcia okien": [self.open_wind, 0, 1, 0.2, "open_wind"],
+                "Zakres mocy grzejnika [W]": [(self.qd_min, self.qd_max), 0, 2000, 10, "qd_min,qd_max"]
             },
             "Wymiary pokoju": {
                 "Wysokość [m]": [self.height, 0.5, 7.0, 0.5, "height"],
-                "Szerokość [m]":    [self.width, 0.5, 25.0, 0.5, "width"],
-                "Długość [m]":  [self.length, 0.5, 25.0, 0.5, "length"]
+                "Szerokość [m]": [self.width, 0.5, 25.0, 0.5, "width"],
+                "Długość [m]": [self.length, 0.5, 25.0, 0.5, "length"],
+                "Powierzchnia okna [m2]": [self.s2, 0.5, 7.0, 0.5, "s2"]
             },
             "Symulacja": {
-                "Okres próbkowania [s]": [self.t_p, 0.005, 1, 0.005, "t_p"],
-                "Czas symulacji [s]": [self.t_sim, 10, self.t_sim * 10, 10, "t_sim"]
+                "Okres próbkowania [s]": [self.t_p, 0.005, 60, 0.005, "t_p"],
+                "Czas symulacji [s]": [self.t_sim, 10, 3600, 10, "t_sim"]
             },
-            # "Sensor": {
-            #     "Maksymalna wartość pomiaru": [self.val_max, 0, 50, 1, "val_max"]
-            # },
+            "Sensor": {
+                "Zakres wartości pomiaru [℃]": [(self.val_min, self.val_max), -20, 50, 1, "val_min,val_max"]
+            },
             "Regulator": {
                 "Wzmocnienie regulatora": [self.k_p, 0.00005, 0.01, 0.00005, "k_p"],
-                "Czas zdwojenia": [self.t_i, 0.00001, 0.01, 0.00001, "t_i"],
-                "Czas wyprzedzenia": [self.t_d, 0.005, 3600, 0.005, "t_d"],
-                # "Maksymalne napięcie wyjściowe": [self.u_max, 0, 25, 1, "u_max"],
-                # "Minimalne napięcie wyjściowe": [self.u_min, -10, 10, 1, "u_min"],
-                "Zakres napięć wyjściowych": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
+                "Czas zdwojenia [s]": [self.t_i, 0.00001, 0.01, 0.00001, "t_i"],
+                "Czas wyprzedzenia [s]": [self.t_d, 0.005, 3600, 0.005, "t_d"],
+                "Zakres napięć wyjściowych [V]": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
             }
         }
