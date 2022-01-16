@@ -88,13 +88,13 @@ class Parameter(object):
         return {
             "Pokój": {
                 # "<nazwa parametru [jednostka]>: [<wartość początkowa>, <min>, <max>, <krok>, <nazwa atrybutu>]
-                "Temperatura na zawnątrz [℃]": [self.t_outside, -20, 35, 1, "t_outside"],
+                "Temperatura na zawnątrz [℃]": [self.t_outside, -20, 35, 0.1, "t_outside"],
                 "Temperatura początkowa [℃]": [self.val_p, -20, 35, 0.1, "val_p"],
                 "Temperatura docelowa [℃]": [self.val_ust, -20, 35, 0.1, "val_ust"],
                 "Współczynnik przenikania ścian [W/(m2℃)]": [self.u1, 0.1, 1, 0.1, "u1"],
                 "Współczynnik przenikania okna  [W/(m2℃)]": [self.u2, 1, 100, 1, "u2"],
                 # "Ilość okien w pomieszczeniu": [self.num_window, 0, 10, 1, "num_window"],
-                "Wpółczynnik otwarcia okien": [self.open_wind, 0, 1, 0.2, "open_wind"],
+                "Wpółczynnik otwarcia okien": [self.open_wind, 0, 1, 0.01, "open_wind"],
                 "Zakres mocy grzejnika [W]": [(self.qd_min, self.qd_max), 0, 2000, 10, "qd_min,qd_max"]
             },
             "Wymiary pokoju": {
@@ -103,17 +103,17 @@ class Parameter(object):
                 "Długość [m]": [self.length, 0.5, 25.0, 0.5, "length"],
                 "Powierzchnia okna [m2]": [self.s2, 0.5, 7.0, 0.5, "s2"]
             },
-            "Symulacja": {
-                "Okres próbkowania [s]": [self.t_p, 0.005, 60, 0.005, "t_p"],
-                "Czas symulacji [s]": [self.t_sim, 10, 3600, 10, "t_sim"]
-            },
-            "Sensor": {
-                "Zakres wartości pomiaru [℃]": [(self.val_min, self.val_max), -20, 50, 1, "val_min,val_max"]
-            },
             "Regulator": {
                 "Wzmocnienie regulatora": [self.k_p, 0.00005, 0.01, 0.00005, "k_p"],
                 "Czas zdwojenia [s]": [self.t_i, 0.00001, 0.01, 0.00001, "t_i"],
-                "Czas wyprzedzenia [s]": [self.t_d, 0.005, 3600, 0.005, "t_d"],
+                "Czas wyprzedzenia [s]": [self.t_d, 0.005, 2.0, 0.005, "t_d"],
                 "Zakres napięć wyjściowych [V]": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
+            },
+            "Symulacja": {
+                "Okres próbkowania [s]": [self.t_p, 0.005, 1, 0.005, "t_p"],
+                "Czas symulacji [s]": [self.t_sim, 10, 500, 10, "t_sim"]
+            },
+            "Sensor": {
+                "Zakres wartości pomiaru [℃]": [(self.val_min, self.val_max), -20, 50, 1, "val_min,val_max"]
             }
         }
