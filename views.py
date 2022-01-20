@@ -28,7 +28,7 @@ def projekt():
 @views.route('/cennik')
 def cennik():
     return render_template("prices.html")
-
+    
 
 # Test
 @views.route('/bokeh')
