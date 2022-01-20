@@ -141,11 +141,11 @@ class Controller:
     def get_simulation_result(self):
         dc = {
             'Krok': arange(0, self.params.t_sim, self.params.t_p),
-            'Poziom': self.readings[:-1],
+            'Temperatura': self.readings[:-1],
             'Sygnaly': self.inputs,
             'Uchyby': self.deviations[:-1]
         }
-        diff = len(dc['Krok']) - len(dc['Poziom'])
+        diff = len(dc['Krok']) - len(dc['Temperatura'])
         if diff > 0:
             dc['Krok'] = dc['Krok'][:-diff]
         return pd.DataFrame(dc)

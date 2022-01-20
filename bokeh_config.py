@@ -71,7 +71,7 @@ def prepare_layout(controller: Controller):
 
     # przygotuj legendę
     legend = Legend(items=[
-        LegendItem(label='Poziom', renderers=[lines_temp], index=0),
+        LegendItem(label='Temperatura', renderers=[lines_temp], index=0),
         LegendItem(label='Uchyby', renderers=[lines_deviation], index=0),
         LegendItem(label='Moc grzejnika', renderers=[lines_input], index=0)
     ])
@@ -197,7 +197,7 @@ def dict_from_cds(cds):
     """
     data_dict_temp = {
         'xs': [cds['Krok']],
-        'ys': [cds['Poziom']],
+        'ys': [cds['Temperatura']],
         'line_color': ['#ff0000']
     }
     data_dict_deviation = {
