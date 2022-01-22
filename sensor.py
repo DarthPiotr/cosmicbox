@@ -24,14 +24,22 @@ class Sensor:
         volume = self.params.length * self.params.width * self.params.height
         t_outside = self.cap_temperature(self.params.t_outside)
         # # Straty ciepła
-        wasted = float(
-            ((self.params.u1 * self.params.s1)  # ściany
-             + (self.params.num_window * self.params.open_wind * self.params.u2 * self.params.s2))  # okna
-            * (prev_val - t_outside))
+        wasted = self.get_energy_waste(prev_val - t_outside)
 
         reading = float(((q_d - wasted) / (self.params.c * self.params.d * volume)) * t_p + prev_val)
 
         return self.cap_temperature(reading)
+
+    def get_energy_waste(self, delta_temperature):
+        """
+        Podaje straty ciepła wynikające z obecnych ustawień
+        :param delta_temperature: różnica między obecną temperaturą a docelową
+        :return: straty ciepła [W]
+        """
+        return float(
+            ((self.params.u1 * self.params.s1)  # ściany
+             + (self.params.num_window * self.params.open_wind * self.params.u2 * self.params.s2))  # okna
+            * delta_temperature)
 
     def cap_temperature(self, temperature):
         """

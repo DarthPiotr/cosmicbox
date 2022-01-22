@@ -104,8 +104,8 @@ class Parameter(object):
                 "Powierzchnia okna [m2]": [self.s2, 0.5, 7.0, 0.5, "s2"]
             },
             "Regulator": {
-                "Wzmocnienie regulatora": [self.k_p, 0.00005, 0.01, 0.00005, "k_p"],
-                "Czas zdwojenia [s]": [self.t_i, 0.00001, 0.01, 0.00001, "t_i"],
+                "Wzmocnienie regulatora": [self.k_p, 0.00005, 2, 0.00005, "k_p"],
+                "Czas zdwojenia [s]": [self.t_i, 0.00001, 2, 0.00001, "t_i"],
                 "Czas wyprzedzenia [s]": [self.t_d, 0.005, 2.0, 0.005, "t_d"],
                 "Zakres napięć wyjściowych [V]": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
             },
