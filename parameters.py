@@ -51,6 +51,11 @@ class Parameter(object):
     t_sim: float = 100
     """Czas symulacji [s]"""
 
+    t_sum: float = 1
+    """Okres sumy ruchomej"""
+    sum_length: int = int(t_sum / t_p)
+    """Liczba elementów w sumie ruchomej"""
+
     # Regulator
     u_max: float = 10
     """Maksymalne napięcie wyjściowe"""
@@ -83,6 +88,7 @@ class Parameter(object):
 
     def update_complex_params(self):
         self.s1 = max(0.0, (2 * self.height * self.length + 2 * self.width * self.height) - (self.num_window * self.s2))
+        self.sum_length = int(self.t_sum / self.t_p)
 
     def get_parameters_dictionary(self):
         return {
@@ -104,13 +110,13 @@ class Parameter(object):
                 "Powierzchnia okna [m2]": [self.s2, 0.5, 7.0, 0.5, "s2"]
             },
             "Regulator": {
-                "Wzmocnienie regulatora": [self.k_p, 0.00005, 2, 0.00005, "k_p"],
+                "Wzmocnienie regulatora": [self.k_p, 0.00005, 0.05, 0.00005, "k_p"],
                 "Czas zdwojenia [s]": [self.t_i, 0.00001, 2, 0.00001, "t_i"],
                 "Czas wyprzedzenia [s]": [self.t_d, 0.005, 2.0, 0.005, "t_d"],
                 "Zakres napięć wyjściowych [V]": [(self.u_min, self.u_max), -10, 25, 1, "u_min,u_max"]
             },
             "Symulacja": {
-                "Okres próbkowania [s]": [self.t_p, 0.005, 1, 0.005, "t_p"],
+                "Okres próbkowania [s]": [self.t_p, 0.005, self.t_sum, 0.005, "t_p"],
                 "Czas symulacji [s]": [self.t_sim, 10, 500, 10, "t_sim"]
             },
             "Sensor": {

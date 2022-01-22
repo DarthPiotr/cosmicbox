@@ -27,25 +27,7 @@ class Controller:
     """Maksymalna wartość pomiaru"""
 
     params: Parameter
-    """Aktualne wartości parametrów"""
-    # # Pomieszczenie
-    # val_p: float = 0.0
-    # """Początkowa wartość regulowanego parametru - temperatury"""
-    # val_ust: float = 21.0
-    # # 1.5
-    # """Docelowa wartość regulowanego parametru - temperatury"""
-    #
-    # _qd_min: float = 0.0
-    # """Minimalne otwarcie zaworu (moc grzejnika)"""
-    # _qd_max: float = 1000.0
-    # # 0.05
-    # """Maksymalne otwarcie zaworu (moc grzejnika)"""
 
-    # Symulacja
-    # t_p: float = 0.01
-    # """Okres próbkowania [s]"""
-    # t_sim: float = 18
-    # """Czas symulacji [s]"""
     readings: list = []
     """Lista odczytów"""
     signals: list = []
@@ -55,26 +37,12 @@ class Controller:
     inputs: list = []
     """Lista wartości 'wpływów' do układu"""
 
-    # # Symulacja 2 - temp
-    # u1: float = 2 / 237.15
-    # # 1 - 0.2
-    # """współczynnik przenikania ciepła przez ściany [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    # u2: float = 0.9 / 273.15
-    # """współczynnik przenikania ciepła przez okno [W/(m2*K)] -> st.C - na razie podany maxymalny"""
-    # temp_length = 10
-    # temp_width = 10
-    # temp_height = 3
-    # num_window = 1
-    # t_outside = 0
-    # """temp parametry"""
-    # open_wind = 0.2
-    # """współczynnik otwarcia okna"""
-    # s2: float = 1.6 * 0.5
-    # """powierzchnia okna (wymiany ciepła) [m2]"""
-    # s1: float = (2 * temp_height*temp_length + 2 * temp_width * temp_height) - (num_window * s2)
-    # """powierzchnia ściany (wymiany ciepła) [m2]"""
-    # efficiency = 0.8
-    # """sprawność urządzenia w przedziale (0; 1)"""
+    energy_ins: list = []
+    energy_ins_sums: list = []
+    """Energia dostarczona do układu"""
+    energy_outs: list = []
+    energy_outs_sums: list = []
+    """Energia dostarczona do układu"""
 
     def __init__(self):
         self.params = Parameter()
@@ -103,23 +71,38 @@ class Controller:
         input_ = self._signal_to_input(signal)
         self.inputs.append(input_)
 
-        # # Odczytaj aktualny poziom
+        self.energy_ins.append(self.inputs[-1] * self.params.t_p)
+        self.energy_outs.append(self._sensor.get_energy_waste(self.readings[-1] - self.params.t_outside)
+                                * self.params.t_p)
+
+        # # Odczytaj aktualną temperaturę
         reading = self._sensor.read(prev_val=self.readings[-1], q_d=input_, t_p=self.params.t_p)
         self.readings.append(reading)
 
     def simulate(self):
         """Wykonuje symulację"""
         step_count = self.params.t_sim / self.params.t_p
+
         self.readings = [self.params.val_p]
         self.deviations = [self.params.val_ust - self.params.val_p]
         self.signals = []
         self.inputs = []
+        self.energy_ins = [0]
+        self.energy_ins_sums = [0]
+        self.energy_outs = [0]
+        self.energy_outs_sums = [0]
         for n in range(0, int(step_count)):
             self.make_step()
-        # print("Aktualny poziom: ", self.readings)
-        # print("Uchyb: ", self.deviations)
-        # print("Sygnał sterujący: ", self.signals)
-        # print("Nastawienie zaworu: ", self.inputs)
+
+        self.count_sums(self.energy_ins, self.energy_ins_sums)
+        self.count_sums(self.energy_outs, self.energy_outs_sums)
+
+    def count_sums(self, array, array_sums):
+        for i in range(1, len(array) - 1):
+            if i < self.params.sum_length:
+                array_sums.append(array_sums[i - 1] + array[i])
+            else:
+                array_sums.append(sum(array[i - self.params.sum_length + 1:i - 1]))
 
     def _signal_to_input(self, signal: float) -> float:
         """
@@ -139,11 +122,18 @@ class Controller:
         # return self.efficiency * self._qd_max * signal
 
     def get_simulation_result(self):
+        balance = []
+        for i in range(0, len(self.energy_ins_sums)-1):
+            balance.append(self.energy_ins_sums[i] - self.energy_outs_sums[i])
+
         dc = {
             'Krok': arange(0, self.params.t_sim, self.params.t_p),
-            'Temperatura': self.readings[:-1],
-            'Sygnaly': self.inputs,
-            'Uchyby': self.deviations[:-1]
+            'Temperatura': self.readings[self.params.sum_length:-1],
+            'Sygnaly': self.inputs[self.params.sum_length:],
+            'Uchyby': self.deviations[self.params.sum_length:-1],
+            'Dostarczane': self.energy_ins_sums[self.params.sum_length:],
+            'Straty': self.energy_outs_sums[self.params.sum_length:],
+            'Balans': balance[self.params.sum_length-1:]
         }
         diff = len(dc['Krok']) - len(dc['Temperatura'])
         if diff > 0:

@@ -53,27 +53,41 @@ def prepare_layout(controller: Controller):
         end=controller.params.qd_max * 1.1  # ,
         # bounds=(-controller.params.qd_max * 1.1, controller.params.qd_max * 1.5)
     )}
-    plot.add_layout(LinearAxis(y_range_name='y_inputs', axis_label='Moc grzejnika [W]'), 'right')
+    plot.add_layout(LinearAxis(y_range_name='y_inputs', axis_label='Dostarczone ciepło [J]'), 'right')
 
     # Przygotuj dane do wyświetlenia
-    data_dict_temp, data_dict_deviation, data_dict_input = dict_from_cds(cds)
+    data_dict_temp, data_dict_deviation, data_dict_input, \
+        data_dict_energy_in, data_dict_energy_out, data_dict_balance = dict_from_cds(cds)
+
     source_temp = ColumnDataSource(data=data_dict_temp)
-    source_deviation = ColumnDataSource(data=data_dict_deviation)
-    source_input = ColumnDataSource(data=data_dict_input)
+    # source_deviation = ColumnDataSource(data=data_dict_deviation)
+    # source_input = ColumnDataSource(data=data_dict_input)
+    source_energy_in = ColumnDataSource(data=data_dict_energy_in)
+    source_energy_out = ColumnDataSource(data=data_dict_energy_out)
+    source_balance = ColumnDataSource(data=data_dict_balance)
 
     # Narysuj linie na wykresie
     lines_temp = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_temp)
-    lines_deviation = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_deviation)
-    lines_input = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_input,
-                                  y_range_name='y_inputs')
+    # lines_deviation = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_deviation)
+    # lines_input = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_input,
+    #                               y_range_name='y_inputs')
+    lines_energy_in = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_energy_in,
+                                      y_range_name='y_inputs')
+    lines_energy_out = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_energy_out,
+                                       y_range_name='y_inputs')
+    lines_balance = plot.multi_line(xs='xs', ys='ys', line_color='line_color', source=source_balance,
+                                       y_range_name='y_inputs')
 
-    lines_deviation.visible = False
+    # lines_deviation.visible = False
 
     # przygotuj legendę
     legend = Legend(items=[
         LegendItem(label='Temperatura', renderers=[lines_temp], index=0),
-        LegendItem(label='Uchyby', renderers=[lines_deviation], index=0),
-        LegendItem(label='Moc grzejnika', renderers=[lines_input], index=0)
+        # LegendItem(label='Uchyby', renderers=[lines_deviation], index=0),
+        # LegendItem(label='Moc grzejnika', renderers=[lines_input], index=0),
+        LegendItem(label='Dostarczone ciepło', renderers=[lines_energy_in], index=0),
+        LegendItem(label='Straty ciepła', renderers=[lines_energy_out], index=0),
+        LegendItem(label='Bilans cieplny', renderers=[lines_balance], index=0)
     ])
     plot.add_layout(legend)
     plot.legend.click_policy = 'hide'
@@ -89,16 +103,6 @@ def prepare_layout(controller: Controller):
                 curdoc().clear()
                 controller.update_params(Parameter.from_json(filename))
                 curdoc().add_root(prepare_layout(controller))
-
-                # # Zaktualizuj parametr i przeprowadź nową symulację
-                # controller.simulate()
-                #
-                # # Zaktualizuj źródła danych wykresu
-                # cds_ = controller.get_simulation_result()
-                # data_temp_, data_deviation_, data_input_ = dict_from_cds(cds_)
-                # source_temp.data = data_temp_
-                # source_deviation.data = data_deviation_
-                # source_input.data = data_input_
 
             # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
             button.on_click(partial(callback_button, filename=preset_path + file))
@@ -147,10 +151,14 @@ def prepare_layout(controller: Controller):
 
                 # Zaktualizuj źródła danych wykresu
                 cds_ = controller.get_simulation_result()
-                data_temp_, data_deviation_, data_input_ = dict_from_cds(cds_)
+                data_temp_, data_deviation_, data_input_, \
+                    _data_energy_in, _data_energy_out, _data_balance = dict_from_cds(cds_)
                 source_temp.data = data_temp_
-                source_deviation.data = data_deviation_
-                source_input.data = data_input_
+                # source_deviation.data = data_deviation_
+                # source_input.data = data_input_
+                source_energy_in.data = _data_energy_in
+                source_energy_out.data = _data_energy_out
+                source_balance.data = _data_balance
 
             # Dodaj callback do zdarzenia wybrania nowej wartości suwakiem
             slider.on_change('value_throttled', partial(callback_slider, attrname=values[4]))
@@ -210,4 +218,20 @@ def dict_from_cds(cds):
         'ys': [cds['Sygnaly']],
         'line_color': ['#00ff00']
     }
-    return data_dict_temp, data_dict_deviation, data_dict_input
+    data_dict_energy_in = {
+        'xs': [cds['Krok']],
+        'ys': [cds['Dostarczane']],
+        'line_color': ['#00ff00']
+    }
+    data_dict_energy_out = {
+        'xs': [cds['Krok']],
+        'ys': [cds['Straty']],
+        'line_color': ['#51dfc3']
+    }
+    data_dict_balance = {
+        'xs': [cds['Krok']],
+        'ys': [cds['Balans']],
+        'line_color': ['#520f5c']
+    }
+    return data_dict_temp, data_dict_deviation, data_dict_input, \
+        data_dict_energy_in, data_dict_energy_out, data_dict_balance
